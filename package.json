@@ -1,0 +1,7 @@
+{
+  "name": "panda-professor-static",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Panda Professor static tourism site powered by CDN libraries.",
+  "type": "module"
+}

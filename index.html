@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="emerald">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title data-i18n="indexPageTitle">Panda Professor - Chengdu Tours</title>
+  <meta name="description" content="Authentic, private, and deeply knowledgeable tours of Chengdu, guided by local experts." data-i18n="indexMetaDescription">
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- DaisyUI 5 CDN (static versions) -->
+  <link href="https://cdn.jsdelivr.net/npm/daisyui@5.3.10/daisyui.css" rel="stylesheet" type="text/css" />
+  <link href="https://cdn.jsdelivr.net/npm/daisyui@5.3.10/themes.css" rel="stylesheet" type="text/css" />
+  
+  <!-- Tailwind CSS 4 CDN (static version) -->
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4.0.14/dist/index.global.js"></script>
+  
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="style.css">
+  
+  <!-- Icons (Lucide) local script -->
+  <script src="js/lucide.min.js"></script>
+
+  <!-- localForage (IndexedDB) CDN (static version) -->
+  <script src="https://cdn.jsdelivr.net/npm/localforage@1.10.0/dist/localforage.min.js"></script>
+</head>
+<body class="bg-base-100 text-base-content selection:bg-primary/30">
+  <a href="#main-content" class="skip-link" data-i18n="skipToContent">Skip to content</a>
+
+  <!-- ======================== NAVBAR (Drawer) ======================== -->
+  <div class="drawer">
+    <input id="mobile-drawer" type="checkbox" class="drawer-toggle" />
+    <div class="drawer-content flex flex-col">
+      <!-- Navbar Content -->
+      <nav class="navbar navbar-glass sticky top-0 z-50 w-full px-3 sm:px-6 lg:px-8" data-i18n-attr="aria-label:primaryNavigationAriaLabel">
+        <div class="navbar-start min-w-0">
+          <label for="mobile-drawer" class="btn btn-square btn-ghost lg:hidden mr-2" data-i18n-attr="aria-label:openSidebarAriaLabel">
+            <svg xmlns="http://www.w3.org/2000/svg" class="inline-block h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+          </label>
+          <a href="index.html" class="brand-lockup group" id="headerBrandLink" data-i18n-attr="aria-label:homeLinkAriaLabel">
+            <img src="logo.png" alt="Panda Professor" class="brand-logo logo-img" data-brand-logo />
+            <span id="headerBrandTitle" class="brand-title font-bold tracking-tight hidden sm:inline-flex truncate group-hover:text-primary transition-colors">Panda Professor</span>
+          </a>
+        </div>
+        
+        <div class="navbar-center hidden xl:flex min-w-0">
+          <ul class="menu menu-horizontal px-1 gap-1 xl:gap-2 font-medium text-sm xl:text-base max-w-full">
+            <li><a class="px-2 xl:px-3" href="#tours" data-i18n="ourTours">Our Tours</a></li>
+            <li><a class="px-2 xl:px-3" href="#builder" data-i18n="dayBuilderTitle">Day Builder</a></li>
+            <li><a class="px-2 xl:px-3" href="#reviews" data-i18n="reviewsTitle">Reviews</a></li>
+            <li><a class="px-2 xl:px-3" href="#faq" data-i18n="faqTitle">FAQ</a></li>
+          </ul>
+        </div>
+        
+        <div class="navbar-end gap-2 sm:gap-3 flex items-center">
+          <label for="themeSelect" class="sr-only" data-i18n="themeSelectLabel">Theme</label>
+          <select id="themeSelect" class="select select-sm select-bordered w-20 sm:w-24 lg:w-28"></select>
+          <button class="btn btn-outline btn-sm font-bold w-12 shrink-0" id="langToggleText" type="button" data-i18n-attr="aria-label:langToggleAriaLabel">EN</button>
+          <a class="btn btn-primary btn-sm ml-0 sm:ml-1 hidden md:inline-flex" href="#builder" data-i18n="bookNow">Book Now</a>
+        </div>
+      </nav>
+
+      <main id="main-content" tabindex="-1" class="flex-1">
+      <!-- ======================== HERO SECTION ======================== -->
+      <section id="hero" class="hero min-h-[85vh] relative overflow-hidden hero-gradient">
+        <!-- Abstract blur background artifacts -->
+        <div class="absolute -top-40 -right-40 w-96 h-96 bg-primary/20 rounded-full blur-3xl opacity-50 mix-blend-multiply pointer-events-none animate-float"></div>
+        <div class="absolute top-1/2 -left-20 w-72 h-72 bg-secondary/30 rounded-full blur-3xl opacity-40 mix-blend-multiply pointer-events-none animate-float" style="animation-delay: -2s;"></div>
+        
+        <div class="hero-content text-center z-10 p-6">
+          <div class="max-w-2xl px-4 py-16 glass-panel rounded-3xl animate-fade-in-up shadow-2xl">
+            <div class="flex justify-center mb-6">
+            <div class="w-28 h-28 sm:w-36 sm:h-36 lg:w-40 lg:h-40 rounded-full border-4 border-base-100 bg-white shadow-xl animate-bounce-in flex items-center justify-center p-3 sm:p-4 relative">
+              <div class="absolute inset-0 bg-primary/10 rounded-full animate-ping opacity-20"></div>
+              <img src="logo.png" alt="Panda Logo" class="w-full h-full object-contain animate-wiggle" data-brand-logo />
+            </div>
+            </div>
+            
+            <h1 class="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-extrabold tracking-tight mb-4 text-balance leading-tight">
+              <span data-i18n="heroTitleP1">Discover Chengdu</span>
+              <br>
+              <span class="text-primary" data-i18n="heroTitleP2">with a Local Scholar</span>
+            </h1>
+            
+            <p class="py-6 text-lg md:text-xl text-base-content/80 font-medium max-w-xl mx-auto text-pretty" data-i18n="heroSubtitle">
+              Experience the true essence of Sichuan. From intimate panda encounters to hidden culinary treasures, explore my home city through the eyes of a passionate expert.
+            </p>
+            
+            <div class="flex flex-wrap justify-center gap-3 mt-4">
+              <div class="badge badge-lg gap-2 py-3 bg-base-100/80 backdrop-blur border-none shadow-sm"><i data-lucide="award" class="w-4 h-4 text-warning"></i> <span data-i18n="expertGuides">Expert Guides</span></div>
+              <div class="badge badge-lg gap-2 py-3 bg-base-100/80 backdrop-blur border-none shadow-sm"><i data-lucide="sparkles" class="w-4 h-4 text-secondary"></i> <span data-i18n="authenticExp">Authentic</span></div>
+              <div class="badge badge-lg gap-2 py-3 bg-base-100/80 backdrop-blur border-none shadow-sm"><i data-lucide="shield-check" class="w-4 h-4 text-success"></i> <span data-i18n="maxComfort">Max Comfort</span></div>
+            </div>
+            
+            <div class="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
+              <a href="#tours" class="btn btn-primary btn-lg shadow-lg" data-i18n="viewTours">Explore Experiences</a>
+              <a href="#builder" class="btn btn-outline btn-lg bg-base-100/50 backdrop-blur" data-i18n="bookNow">Plan Your Journey</a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Divider -->
+      <hr class="section-divider" />
+
+      <!-- ======================== TOURS SECTION ======================== -->
+      <section id="tours" class="py-20 px-4 sm:px-8 max-w-7xl mx-auto">
+        <div class="text-center mb-12">
+        <h2 class="section-heading mb-4" data-i18n="ourTours">Curated Experiences</h2>
+          <div class="flex flex-col sm:flex-row justify-between items-center bg-base-200/50 p-2 rounded-xl gap-4">
+            
+            <div class="join overflow-x-auto w-full sm:w-auto pb-2 sm:pb-0 scrollbar-hide hide-scroll" role="group" data-i18n-attr="aria-label:filterControlsLabel">
+            <button class="join-item btn btn-sm filter-btn" data-filter="All" data-action="set-filter" type="button" data-i18n="filterAll">All</button>
+            <button class="join-item btn btn-sm btn-outline filter-btn" data-filter="Pandas" data-action="set-filter" type="button" data-i18n="filterPandas">Pandas</button>
+            <button class="join-item btn btn-sm btn-outline filter-btn" data-filter="Food" data-action="set-filter" type="button" data-i18n="filterFood">Food</button>
+            <button class="join-item btn btn-sm btn-outline filter-btn" data-filter="History" data-action="set-filter" type="button" data-i18n="filterHistory">History</button>
+            <button class="join-item btn btn-sm btn-outline filter-btn" data-filter="Culture" data-action="set-filter" type="button" data-i18n="filterCulture">Culture</button>
+            </div>
+            
+            <div class="w-full sm:w-64">
+            <label for="tourSearch" class="sr-only" data-i18n="searchLabel">Search tours</label>
+            <label class="input input-sm input-bordered flex items-center gap-2 bg-base-100 shadow-sm">
+                <input type="text" id="tourSearch" class="grow" placeholder="Search tours..." data-i18n="searchPlaceholder" data-i18n-attr="aria-label:searchLabel" />
+                <i data-lucide="search" class="w-4 h-4 opacity-50"></i>
+              </label>
+            </div>
+            
+          </div>
+        </div>
+
+        <div id="toursGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+          <!-- Populated by JS -->
+        </div>
+      </section>
+
+      <!-- Divider -->
+      <hr class="section-divider" />
+
+      <!-- ======================== DAY BUILDER ======================== -->
+      <section id="builder" class="py-20 px-4 sm:px-8 max-w-5xl mx-auto">
+        <div class="card bg-base-200 shadow-xl overflow-visible">
+          <div class="card-body p-6 sm:p-10">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+              <div>
+                <h2 class="section-heading flex items-center gap-3">
+                  <i data-lucide="calendar-check" class="section-heading-icon text-primary"></i> <span data-i18n="dayBuilderTitle">Your Custom Day</span>
+                </h2>
+                <p class="text-base-content/70 mt-1 text-sm bg-base-100/50 px-3 py-1 rounded-full border border-base-300 backdrop-blur w-fit" data-i18n="dayBuilderNote">Drag and drop features are handled via UI selections below.</p>
+              </div>
+              <div class="flex gap-2">
+                <button class="btn btn-outline btn-sm shadow-sm" id="clearPlanBtn" type="button" data-i18n="clearPlan">Clear</button>
+                <button id="shareBtn" class="btn btn-outline btn-sm shadow-sm" type="button">
+                  <i data-lucide="share" class="w-4 h-4 mr-1"></i> <span data-i18n="sharePlan">Share</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- List of selected tours -->
+            <div id="planList" class="flex flex-col gap-3 min-h-[160px] bg-base-100 p-4 rounded-xl border border-base-300 shadow-inner">
+              <!-- Populated by JS -->
+              <div id="emptyPlanState" class="p-8 text-center opacity-60 bg-base-200 rounded-box border border-dashed border-base-content/20" data-i18n="dayBuilderEmpty">
+                Your day is empty. Add tours from the list above.
+              </div>
+            </div>
+
+            <!-- Stats & Book -->
+            <div class="mt-8 pt-6 border-t border-base-300 flex flex-col md:flex-row gap-6 justify-between items-center">
+              <div class="stats stats-vertical lg:stats-horizontal shadow bg-base-100 w-full md:w-auto">
+                <div class="stat p-4">
+                  <div class="stat-title text-xs" data-i18n="totalDuration">Total Time</div>
+                  <div class="stat-value text-2xl text-secondary" id="statsDuration">0h</div>
+                </div>
+                <div class="stat p-4">
+                  <div class="stat-title text-xs" data-i18n="totalPrice">Est. Total</div>
+                  <div class="stat-value text-2xl text-primary" id="statsPrice">¥0</div>
+                </div>
+              </div>
+              
+              <button id="bookPlanBtn" class="btn btn-primary btn-lg shadow-lg w-full md:w-auto px-12" type="button" data-i18n="bookPlan">
+                Request Booking
+              </button>
+            </div>
+            
+          </div>
+        </div>
+      </section>
+
+      <!-- Divider -->
+      <hr class="section-divider" />
+
+      <!-- ======================== REVIEWS ======================== -->
+      <section id="reviews" class="py-20 px-4 sm:px-8 bg-base-200/30">
+        <div class="max-w-7xl mx-auto">
+          <h2 class="section-heading mb-10 text-center flex justify-center items-center gap-3">
+            <i data-lucide="message-square-quote" class="section-heading-icon text-secondary"></i> <span data-i18n="reviewsTitle">Traveller Stories</span>
+          </h2>
+          
+          <div class="carousel carousel-center max-w-full p-4 space-x-4 bg-transparent rounded-box" id="reviewsTrack">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+      </section>
+
+      <!-- Divider -->
+      <hr class="section-divider" />
+
+      <!-- ======================== FAQ ======================== -->
+      <section id="faq" class="py-20 px-4 sm:px-8 max-w-4xl mx-auto">
+        <h2 class="section-heading mb-10 text-center flex justify-center items-center gap-3">
+          <i data-lucide="help-circle" class="section-heading-icon text-primary"></i> <span data-i18n="faqTitle">Frequently Asked Questions</span>
+        </h2>
+        <div id="faqAccordion" class="faq-grid">
+          <!-- Populated by JS -->
+        </div>
+      </section>
+      </main>
+
+      <!-- ======================== FOOTER ======================== -->
+      <footer class="footer site-footer bg-base-300 text-base-content border-t border-base-content/10 p-8 sm:p-10 gap-8" role="contentinfo" data-i18n-attr="aria-label:footerAriaLabel">
+        <aside class="site-footer-brand space-y-4 md:max-w-xs">
+          <a href="index.html" class="flex items-center gap-3 site-footer-brand-mark" id="footerBrandLink" data-i18n-attr="aria-label:footerBrandAriaLabel">
+            <img src="logo.png" alt="" class="w-12 h-12 rounded-xl grayscale opacity-85" data-brand-logo />
+            <span class="site-footer-brand-text font-bold leading-tight">
+              <span id="siteNameDisplay">Panda Professor</span>
+              <br />
+              <span class="opacity-70 text-sm font-normal" data-i18n="footerBrandTagline">Chengdu Tours</span>
+            </span>
+          </a>
+          <p class="text-sm opacity-80 max-w-xs" data-i18n="footerAbout">Authentic, private, and deeply knowledgeable tours of Chengdu, guided by local experts.</p>
+          <div class="space-y-2">
+            <p class="footer-title font-semibold not-italic" data-i18n="footerContact">Contact</p>
+            <a href="mailto:hello@pandaprofessor.com" class="link link-hover flex items-center gap-2" id="contactEmailDisplay" data-i18n-attr="aria-label:footerEmailA11y">
+              <i data-lucide="mail" class="w-4 h-4" aria-hidden="true"></i>
+              <span class="opacity-80" data-i18n="footerEmailLabel">Email</span>
+              <span class="underline">hello@pandaprofessor.com</span>
+            </a>
+            <a href="#" class="link link-hover flex items-center gap-2" id="contactPhoneDisplay" data-i18n-attr="aria-label:footerPhoneA11y">
+              <i data-lucide="phone" class="w-4 h-4" aria-hidden="true"></i>
+              <span class="opacity-80" data-i18n="footerPhoneLabel">Phone</span>
+              <span class="underline">+86 000 0000 0000</span>
+            </a>
+          </div>
+        </aside>
+
+        <nav class="site-footer-section space-y-1" data-i18n-attr="aria-label:footerQuickLinksAriaLabel">
+          <h6 class="footer-title" data-i18n="footerQuickLinks">Quick Links</h6>
+          <a href="#tours" class="link link-hover" data-i18n="ourTours">Our Tours</a>
+          <a href="#builder" class="link link-hover" data-i18n="dayBuilderTitle">Day Builder</a>
+          <a href="#reviews" class="link link-hover" data-i18n="reviewsTitle">Reviews</a>
+          <a href="#faq" class="link link-hover" data-i18n="faqTitle">FAQ</a>
+        </nav>
+
+        <nav class="site-footer-section space-y-1" data-i18n-attr="aria-label:footerPlanningAriaLabel">
+          <h6 class="footer-title" data-i18n="footerPlanning">Planning</h6>
+          <a href="#tours" class="link link-hover" data-i18n="viewTours">Plan Now</a>
+          <a href="#builder" class="link link-hover" data-i18n="dayBuilderTitle">Builder Details</a>
+          <a href="#reviews" class="link link-hover" data-i18n="reviewsTitle">Traveller Stories</a>
+          <a href="#faq" class="link link-hover" data-i18n="faqTitle">Common Questions</a>
+        </nav>
+
+        <nav class="site-footer-section space-y-2" data-i18n-attr="aria-label:footerSocialNavAriaLabel">
+          <h6 class="footer-title" data-i18n="footerFollowUs">Follow</h6>
+          <div class="flex gap-4 flex-wrap" id="socialLinksContainer" role="list" data-i18n-attr="aria-label:socialLinksLabel">
+            <!-- Populated by JS -->
+            <a href="#" class="btn btn-circle btn-sm btn-ghost bg-base-200 admin-social-link-btn" aria-label="Instagram" data-social-label="footerSocialInstagram">
+              <img src="icons/instagram.svg" alt="" class="admin-social-link" aria-hidden="true" />
+            </a>
+            <a href="#" class="btn btn-circle btn-sm btn-ghost bg-base-200 admin-social-link-btn" aria-label="Facebook" data-social-label="footerSocialFacebook">
+              <img src="icons/facebook.svg" alt="" class="admin-social-link" aria-hidden="true" />
+            </a>
+            <a href="#" class="btn btn-circle btn-sm btn-ghost bg-base-200 admin-social-link-btn" aria-label="Twitter" data-social-label="footerSocialTwitter">
+              <img src="icons/twitter.svg" alt="" class="admin-social-link" aria-hidden="true" />
+            </a>
+            <a href="#" class="btn btn-circle btn-sm btn-ghost bg-base-200 admin-social-link-btn" aria-label="WeChat" data-social-label="footerSocialWeChat">
+              <img src="icons/wechat.svg" alt="" class="admin-social-link" aria-hidden="true" />
+            </a>
+            <a href="#" class="btn btn-circle btn-sm btn-ghost bg-base-200 admin-social-link-btn" aria-label="Weibo" data-social-label="footerSocialWeibo">
+              <img src="icons/weibo.svg" alt="" class="admin-social-link" aria-hidden="true" />
+            </a>
+            <a href="#" class="btn btn-circle btn-sm btn-ghost bg-base-200 admin-social-link-btn" aria-label="Xiaohongshu" data-social-label="footerSocialXiaohongshu">
+              <img src="icons/xiaohongshu.svg" alt="" class="admin-social-link" aria-hidden="true" />
+            </a>
+          </div>
+          <p class="text-xs opacity-70 max-w-[16rem]" data-i18n="footerCta">Ask us before booking—your private guide is waiting.</p>
+        </nav>
+      </footer>
+      <div class="footer footer-center p-4 bg-base-300 text-base-content border-t border-base-content/10">
+        <aside>
+          <p class="text-xs opacity-60" data-i18n="footerCopyright">© 2026 Panda Professor Chengdu Tours. All rights reserved.</p>
+        </aside>
+      </div>
+
+    </div>
+    <!-- Drawer Sidebar -->
+    <div class="drawer-side z-[100]">
+      <label for="mobile-drawer" class="drawer-overlay" data-i18n-attr="aria-label:closeSidebarAriaLabel"></label>
+      <ul class="menu p-4 w-80 min-h-full bg-base-100 text-base-content shadow-2xl">
+        <div class="flex justify-between items-center mb-6 pl-2">
+          <span class="font-bold text-xl" data-i18n="menuLabel">Menu</span>
+          <label for="mobile-drawer" class="btn btn-square btn-ghost btn-sm" data-i18n-attr="aria-label:closeSidebarAriaLabel">✕</label>
+        </div>
+        <li><a href="#tours" data-action="close-drawer" data-i18n="ourTours">Our Tours</a></li>
+        <li><a href="#builder" data-action="close-drawer" data-i18n="dayBuilderTitle">Day Builder</a></li>
+        <li><a href="#reviews" data-action="close-drawer" data-i18n="reviewsTitle">Reviews</a></li>
+        <li><a href="#faq" data-action="close-drawer" data-i18n="faqTitle">FAQ</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ======================== MODALS ======================== -->
+  <!-- Tour Detail Modal -->
+  <dialog id="tourModal" class="modal modal-responsive modal-bottom sm:modal-middle">
+    <div class="modal-box">
+      <!-- Populated by JS -->
+    </div>
+    <form method="dialog" class="modal-backdrop">
+      <button data-i18n="close" data-i18n-attr="aria-label:closeModalAriaLabel">close</button>
+    </form>
+  </dialog>
+
+  <!-- Booking Modal -->
+  <dialog id="bookingModal" class="modal modal-responsive">
+    <div class="modal-box max-w-2xl bg-base-100">
+      <form method="dialog">
+        <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2" data-i18n-attr="aria-label:closeBookingFormAriaLabel">✕</button>
+      </form>
+      <h3 class="font-bold text-2xl mb-6 flex items-center gap-2 border-b border-base-200 pb-4">
+        <i data-lucide="send" class="text-primary w-6 h-6"></i> <span data-i18n="bookingTitle">Booking Request</span>
+      </h3>
+      
+      <form id="bookingForm">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+          <fieldset class="fieldset">
+            <legend class="fieldset-legend font-semibold" data-i18n="nameLabel">Full Name</legend>
+                <input type="text" id="bName" class="input flex items-center gap-2 " required data-i18n="bookingNamePlaceholder" placeholder="John Doe" />
+          </fieldset>
+          
+          <fieldset class="fieldset">
+            <legend class="fieldset-legend font-semibold" data-i18n="emailLabel">Email Address</legend>
+            <input type="email" id="bEmail" class="input flex items-center gap-2" required data-i18n="bookingEmailPlaceholder" placeholder="john@example.com" />
+          </fieldset>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+          <fieldset class="fieldset">
+            <legend class="fieldset-legend font-semibold" data-i18n="dateLabel">Preferred Date</legend>
+            <input type="date" id="bDate" class="input flex items-center gap-2" required />
+          </fieldset>
+          
+          <fieldset class="fieldset">
+            <legend class="fieldset-legend font-semibold" data-i18n="guestsLabel">Number of Guests</legend>
+            <input type="number" id="bGuests" class="input flex items-center gap-2" min="1" max="20" required value="2" />
+          </fieldset>
+        </div>
+        
+        <fieldset class="fieldset mb-6">
+          <legend class="fieldset-legend font-semibold" data-i18n="notesLabel">Special Requests or Notes</legend>
+            <textarea id="bNotes" class="textarea h-24" data-i18n="bookingNotesPlaceholder" placeholder="Any dietary restrictions, flight times, etc."></textarea>
+        </fieldset>
+        
+            <p class="text-xs text-base-content/60 mb-6 italic" data-i18n="bookingInfoNote">Note: We use your local email client to securely construct the request. No payment is taken at this stage.</p>
+        
+        <div class="modal-action">
+          <button type="button" class="btn" id="bookingModalCancelBtn" data-i18n="close">Cancel</button>
+          <button type="submit" class="btn btn-primary" data-i18n="submitBooking">Send Request</button>
+        </div>
+      </form>
+    </div>
+  </dialog>
+
+  <dialog id="successModal" class="modal modal-responsive">
+    <div class="modal-box text-center">
+      <form method="dialog">
+      <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2" data-i18n-attr="aria-label:closeSuccessMessageAriaLabel">✕</button>
+      </form>
+      <div class="w-16 h-16 bg-success/20 text-success rounded-full flex items-center justify-center mx-auto mb-4">
+        <i data-lucide="check-circle" class="w-8 h-8"></i>
+      </div>
+      <h3 class="font-bold text-lg mb-2" data-i18n="bookingSuccessTitle">Request Ready!</h3>
+      <p class="py-4" data-i18n="bookingSuccessMsg">Your email client will open. Please send the message to complete your request.</p>
+            <div class="modal-action justify-center">
+              <form method="dialog">
+          <button class="btn btn-primary" data-i18n="bookingSuccessClose">Got it!</button>
+            </form>
+          </div>
+        </div>
+      </dialog>
+
+
+  <!-- ======================== PANDA CHAT WIDGET ======================== -->
+      <button id="chatTriggerBtn" class="btn btn-circle btn-lg panda-chat-trigger glass bg-primary/90 hover:bg-primary border border-primary-content/20 shadow-[0_0_30px_rgba(0,0,0,0.15)]" data-i18n-attr="aria-label:chatTriggerAriaLabel" aria-controls="pandaChatPanel" aria-expanded="false">
+        <div class="relative w-full h-full p-2">
+          <img src="logo.png" alt="Chat" class="w-full h-full object-contain" data-brand-logo />
+          <span class="absolute top-0 right-0 w-3 h-3 bg-error rounded-full border-2 border-white animate-ping"></span>
+          <span class="absolute top-0 right-0 w-3 h-3 bg-error rounded-full border-2 border-white"></span>
+        </div>
+      </button>
+
+  <div id="pandaChatPanel" role="complementary" class="panda-chat-panel hidden flex-col bg-base-100 shadow-2xl border border-base-300" aria-hidden="true" data-i18n-attr="aria-label:chatPanelAriaLabel">
+    <div class="bg-primary text-primary-content p-4 flex justify-between items-center shadow-md z-10 shrink-0">
+      <div class="flex items-center gap-3">
+        <div class="avatar">
+          <div class="w-10 rounded-full bg-white p-1 shadow-inner">
+            <img src="logo.png" alt="Panda Professor" data-brand-logo />
+          </div>
+        </div>
+        <div>
+          <div class="font-bold" data-i18n="chatTitle">Panda Professor</div>
+          <div class="text-xs opacity-80 flex items-center gap-1">
+            <span class="w-2 h-2 bg-success inline-block rounded-full"></span>
+            <span data-i18n="chatOnlineStatus">Online</span>
+          </div>
+        </div>
+      </div>
+      <button id="chatCloseBtn" class="btn btn-sm btn-circle btn-ghost text-primary-content hover:bg-white/20" type="button" data-i18n-attr="aria-label:chatCloseAriaLabel">✕</button>
+    </div>
+    
+    <div id="chatMessages" class="chat-messages bg-base-200/50 relative" aria-live="polite" role="log">
+      <!-- Populated by JS -->
+    </div>
+    
+    <form id="chatForm" class="chat-input-area bg-base-100 border-t border-base-200 shrink-0">
+      <label for="chatInput" class="sr-only" data-i18n="chatInputPlaceholder">Type your message...</label>
+      <input type="text" id="chatInput" data-i18n="chatInputPlaceholder" placeholder="Type your message..." class="input input-bordered w-full input-sm rounded-full bg-base-200 border-base-300 focus:outline-none focus:border-primary" autocomplete="off" />
+      <button type="submit" class="btn btn-circle btn-primary btn-sm shrink-0" data-i18n-attr="aria-label:sendMessageAriaLabel">
+        <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z" /></svg>
+      </button>
+    </form>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/data.js"></script>
+  <script src="js/db.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

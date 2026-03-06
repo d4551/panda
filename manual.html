@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="emerald">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title id="pageTitle">Panda Professor — User Manual</title>
+  <meta name="description" id="metaDesc" content="Complete guide to operating the Panda Professor Chengdu Tours website.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/daisyui@5.3.10/daisyui.css" rel="stylesheet" type="text/css" />
+  <link href="https://cdn.jsdelivr.net/npm/daisyui@5.3.10/themes.css" rel="stylesheet" type="text/css" />
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4.0.14/dist/index.global.js"></script>
+  <link rel="stylesheet" href="style.css">
+  <script src="js/lucide.min.js"></script>
+  <style>
+    .manual-hero { background: linear-gradient(135deg, oklch(0.85 0.15 160 / 0.2), oklch(0.80 0.12 90 / 0.15), oklch(0.75 0.10 30 / 0.1)); }
+    .screenshot-frame { border: 2px solid oklch(0.7 0.05 160 / 0.3); border-radius: 1rem; overflow: hidden; box-shadow: 0 10px 40px oklch(0 0 0 / 0.12); transition: transform 0.3s ease, box-shadow 0.3s ease; }
+    .screenshot-frame:hover { transform: translateY(-4px); box-shadow: 0 20px 50px oklch(0 0 0 / 0.18); }
+    .screenshot-frame img { width: 100%; height: auto; display: block; }
+    .step-number { width: 2.5rem; height: 2.5rem; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-weight: 800; font-size: 1.1rem; flex-shrink: 0; }
+    .toc-link { transition: all 0.2s ease; }
+    .toc-link:hover { transform: translateX(4px); }
+  </style>
+</head>
+<body class="bg-base-100 text-base-content selection:bg-primary/30">
+  <a href="#manual-main" class="skip-link" data-m="skipToContent">Skip to content</a>
+
+<script>
+const M = {
+  en: {
+    pageTitle: "Panda Professor — User Manual",
+    manualTitle: "User Manual",
+    manualSubtitle: "Complete guide to operating the Panda Professor Chengdu Tours website",
+    tocTitle: "Table of Contents",
+    backToSite: "Back to Site",
+    langToggle: "中文",
+    skipToContent: "Skip to content",
+    navAriaLabel: "Manual navigation",
+    brandAriaLabel: "Panda Professor — Home",
+    langAriaLabel: "Switch to Chinese",
+    metaDesc: "Complete guide to operating the Panda Professor Chengdu Tours website.",
+    tableHeaderStore: "Store",
+    tableHeaderDesc: "Description",
+    sec1Title: "1. System Overview",
+    sec1Desc: "Panda Professor is a static, zero-server website for showcasing and booking private Chengdu tours. The system consists of two pages:",
+    sec1Bullet1: "<strong>Public Site</strong> (<code>index.html</code>) — Tour catalogue, Day Builder, reviews, FAQ, and live chat widget for visitors.",
+    sec1Bullet2: "<strong>Admin Dashboard</strong> (<code>admin.html</code>) — PIN-protected control panel for managing tours, bookings, reviews, FAQs, images, and site settings.",
+    sec1Data: "All data is stored locally in the browser using <strong>IndexedDB</strong> (via localForage). No server or database is required. On first visit, default tours, reviews, and FAQs are seeded from built-in data.",
+    sec1Stack: "Technology: DaisyUI 5, Tailwind CSS 4, Lucide Icons, localForage (IndexedDB), Vanilla JavaScript.",
+    sec2Title: "2. Homepage & Navigation",
+    sec2Desc: "The homepage opens with a hero section featuring the Panda Professor brand, tagline, and call-to-action buttons. The top navigation bar provides access to all major sections.",
+    sec2Nav1: "<strong>Desktop:</strong> Navigation links appear in the center of the navbar (Our Tours, Day Builder, Reviews, FAQ).",
+    sec2Nav2: "<strong>Mobile:</strong> A hamburger menu icon opens a slide-out drawer sidebar with the same links.",
+    sec2Nav3: "The <strong>Theme Selector</strong> dropdown (top-right) switches between Emerald, Forest, and Bamboo visual themes.",
+    sec2Nav4: "The <strong>Language Toggle</strong> button (EN/中文) instantly switches the entire site between English and Chinese.",
+    sec2Screenshot: "Homepage hero section (English)",
+    sec2ScreenshotZh: "Homepage hero section (Chinese — after language toggle)",
+    sec3Title: "3. Tour Catalogue",
+    sec3Desc: "The Curated Experiences section displays all active tours as interactive cards. Each card shows a cover image, title, description, price, and duration.",
+    sec3Step1: "<strong>Filter:</strong> Use the filter buttons (All, Pandas, Food, History, Culture) to narrow the tour list by category.",
+    sec3Step2: "<strong>Search:</strong> Type keywords in the search bar to find tours by title or description in both languages.",
+    sec3Step3: "<strong>Favorite:</strong> Click the heart icon on any tour card to save it to your local favorites list.",
+    sec3Step4: "<strong>View Details:</strong> Click the \"View\" button to open a modal showing full tour details — inclusions, exclusions, duration, and pricing.",
+    sec3Step5: "<strong>Add to Plan:</strong> Click the \"+\" button or the \"Add to Day Plan\" button in the detail modal to add the tour to your Day Builder.",
+    sec3Screenshot: "Tour catalogue with filter controls and tour cards",
+    sec4Title: "4. Day Builder",
+    sec4Desc: "The Day Builder lets visitors assemble a custom itinerary by adding multiple tours to a single day plan. It supports full drag-and-drop reordering.",
+    sec4Step1: "<strong>Add tours</strong> from the catalog by clicking \"+\" or dragging a tour card into the plan area.",
+    sec4Step2: "<strong>Customize each stop:</strong> Set start time, duration (hours), number of participants, and optional notes for each tour in the plan.",
+    sec4Step3: "<strong>Reorder</strong> by dragging plan items up or down to change the sequence.",
+    sec4Step4: "<strong>Remove</strong> individual tours, or click \"Clear\" to reset the entire plan.",
+    sec4Step5: "<strong>Share Plan:</strong> Click \"Share\" to copy a shareable URL containing the plan to the clipboard.",
+    sec4Step6: "<strong>Request Booking:</strong> Click \"Request Booking\" to open the booking form, which pre-fills with your selected tours, date, guests, and notes. Submitting generates an email via your local mail client.",
+    sec4Stats: "The stats bar at the bottom shows the estimated total price (¥) and total time for the assembled plan.",
+    sec4Screenshot: "Day Builder interface with plan items and stats",
+    sec5Title: "5. Reviews & FAQ",
+    sec5Desc: "The Traveller Stories section shows a horizontal carousel of review cards. Each card includes traveller name, country, star rating, and review text (bilingual). The FAQ section uses a responsive grid of collapsible accordion items, each with a question and answer in both languages.",
+    sec5Note: "Both sections are dynamically populated from IndexedDB and are fully manageable through the Admin Dashboard.",
+    sec6Title: "6. Panda Chat Widget",
+    sec6Desc: "A floating chat button in the bottom-right corner opens the Panda Professor chat assistant.",
+    sec6Step1: "<strong>Open:</strong> Click the circular panda button (bottom-right). The chat panel slides in with a welcome message.",
+    sec6Step2: "<strong>Quick Reply Buttons:</strong> Three preset topic buttons appear (Recommend a tour, Food info, Panda fact). Click any to receive an instant canned response.",
+    sec6Step3: "<strong>Free Text:</strong> Type any message and press Enter or the send button. The bot responds with a demo reply.",
+    sec6Step4: "<strong>Close:</strong> Click the × button in the chat header to close the panel.",
+    sec6Copy: "All chat text — welcome message, quick-ask labels, and responses — is configurable from the Admin Dashboard under Settings > Chatbot Copy Settings.",
+    sec6Screenshot: "Panda chat widget open with quick reply options",
+    sec7Title: "7. Admin Dashboard — Login",
+    sec7Desc: "Navigate to <code>admin.html</code> to access the admin dashboard. A PIN-protected login screen is shown first.",
+    sec7Step1: "<strong>Default PIN:</strong> <kbd>admin</kbd>. Enter the PIN and click \"Sign In\".",
+    sec7Step2: "After login, you see the dashboard with stats cards (Active Tours, Pending Requests, Resolved) and a tab navigation.",
+    sec7Step3: "The PIN can be changed from the Settings tab once logged in.",
+    sec7Screenshot: "Admin login screen",
+    sec7ScreenshotDash: "Admin dashboard after login",
+    sec8Title: "8. Admin — Managing Content",
+    sec8Desc: "The admin dashboard has six tabs, each managing a different content area:",
+    sec8Tab1: "<strong>Booking Requests:</strong> View submitted booking requests with date, name, email, guests, tour list, and status. Change status (Pending → Contacted → Resolved) or email the guest directly.",
+    sec8Tab2: "<strong>Tour Offerings:</strong> Add, edit, or delete tours. Each tour has bilingual title/description, price, duration, image URL, tags, popular toggle, and active/hidden status.",
+    sec8Tab3: "<strong>Gallery:</strong> Upload images (stored as base64 in IndexedDB). Copy image URLs for use in tour cards.",
+    sec8Tab4: "<strong>Settings:</strong> Change admin PIN, edit site name, contact email/phone, brand logo URL, social media links, and all chatbot copy (bilingual welcome messages, quick-ask labels, and canned responses).",
+    sec8Tab5: "<strong>Reviews:</strong> Add/edit/delete traveller reviews with name, country, and bilingual review text.",
+    sec8Tab6: "<strong>FAQs:</strong> Add/edit/delete FAQ items with bilingual question and answer text.",
+    sec9Title: "9. Internationalization (i18n)",
+    sec9Desc: "The entire system supports English and Chinese. Here is how the i18n system works:",
+    sec9How1: "All user-facing text is stored in the <code>translations</code> object in <code>js/data.js</code>, with <code>en</code> and <code>zh</code> keys.",
+    sec9How2: "HTML elements use <code>data-i18n=\"keyName\"</code> attributes. The <code>applyTranslations()</code> function scans for these and replaces text content.",
+    sec9How3: "For HTML attributes (like <code>aria-label</code>), use <code>data-i18n-attr=\"aria-label:keyName\"</code>.",
+    sec9How4: "The <code>t(key)</code> function in <code>js/app.js</code> resolves translations with fallback to English if a Chinese key is missing.",
+    sec9How5: "The language toggle persists the choice in <code>localStorage</code> under the key <code>pp_lang</code>.",
+    sec9How6: "Admin uses <code>data-i18n-admin</code> attributes and its own translation application in <code>js/admin.js</code>.",
+    sec10Title: "10. Data & Persistence",
+    sec10Desc: "All data is persisted client-side using IndexedDB via localForage. The following stores are used:",
+    sec10Store1: "<strong>tours</strong> — Tour records (CRUD, bilingual)",
+    sec10Store2: "<strong>requests</strong> — Booking requests from visitors",
+    sec10Store3: "<strong>meta</strong> — Admin PIN hash, site settings, seed flag",
+    sec10Store4: "<strong>faqs</strong> — FAQ items (bilingual)",
+    sec10Store5: "<strong>reviews</strong> — Traveller reviews (bilingual)",
+    sec10Store6: "<strong>images</strong> — Uploaded gallery images (base64)",
+    sec10Store7: "<strong>facts</strong> — Panda facts for the chat widget",
+    sec10Warning: "⚠️ Clearing your browser data will erase all stored content. On next visit, default seed data will be restored automatically.",
+    sec11Title: "11. Theme System",
+    sec11Desc: "Three built-in themes are available, selectable from the dropdown in the top-right navbar:",
+    sec11T1: "<strong>Emerald</strong> — Default light theme with green accents.",
+    sec11T2: "<strong>Forest</strong> — Dark theme with deep green tones.",
+    sec11T3: "<strong>Bamboo</strong> — Custom warm theme with earthy, natural Sichuan-inspired tones defined in <code>style.css</code>.",
+    sec11Persist: "Theme choice is persisted in <code>localStorage</code> (key: <code>pp_theme</code>).",
+    footerText: "Panda Professor User Manual — Generated 2026"
+  },
+  zh: {
+    pageTitle: "熊猫教授 — 用户手册",
+    manualTitle: "用户手册",
+    manualSubtitle: "熊猫教授成都旅游网站完整操作指南",
+    tocTitle: "目录",
+    backToSite: "返回网站",
+    langToggle: "EN",
+    skipToContent: "跳至内容",
+    navAriaLabel: "手册导航",
+    brandAriaLabel: "熊猫教授 — 首页",
+    langAriaLabel: "切换到英文",
+    metaDesc: "熊猫教授成都旅游网站完整操作指南。",
+    tableHeaderStore: "存储名",
+    tableHeaderDesc: "描述",
+    sec1Title: "1. 系统概述",
+    sec1Desc: "熊猫教授是一个无需服务器的静态网站，用于展示和预订成都私人导游体验。系统包含两个页面：",
+    sec1Bullet1: "<strong>用户前台</strong>（<code>index.html</code>）— 行程目录、行程构建器、评价、常见问题和实时聊天组件。",
+    sec1Bullet2: "<strong>管理后台</strong>（<code>admin.html</code>）— 受 PIN 码保护的控制面板，用于管理旅行线路、预订、评价、常见问题、图片和网站设置。",
+    sec1Data: "所有数据通过 <strong>IndexedDB</strong>（localForage）存储在浏览器本地，无需服务器或数据库。首次访问时，系统自动从内置数据中填充默认内容。",
+    sec1Stack: "技术栈：DaisyUI 5、Tailwind CSS 4、Lucide Icons、localForage (IndexedDB)、原生 JavaScript。",
+    sec2Title: "2. 首页与导航",
+    sec2Desc: "首页以英雄区域展示熊猫教授品牌标识、标语和行动号召按钮。顶部导航栏可访问所有主要版块。",
+    sec2Nav1: "<strong>桌面端：</strong>导航链接显示在导航栏中央（精选体验、行程构建器、评价、常见问题）。",
+    sec2Nav2: "<strong>手机端：</strong>汉堡菜单图标打开滑出式侧边抽屉，包含相同的导航链接。",
+    sec2Nav3: "<strong>主题选择器</strong>下拉菜单（右上角）可在翡翠、森林和竹林三种视觉主题间切换。",
+    sec2Nav4: "<strong>语言切换</strong>按钮（EN/中文）可即时在英文和中文之间切换整个网站。",
+    sec2Screenshot: "首页英雄区域（英文）",
+    sec2ScreenshotZh: "首页英雄区域（中文 — 切换语言后）",
+    sec3Title: "3. 行程目录",
+    sec3Desc: "精选体验版块以交互卡片的形式展示所有活跃行程，每张卡片显示封面图片、标题、描述、价格和时长。",
+    sec3Step1: "<strong>筛选：</strong>使用筛选按钮（全部、大熊猫、美食、历史、文化）按类别缩小行程列表。",
+    sec3Step2: "<strong>搜索：</strong>在搜索栏中输入关键词，按双语标题或描述查找行程。",
+    sec3Step3: "<strong>收藏：</strong>点击行程卡片上的心形图标即可将其保存到本地收藏列表。",
+    sec3Step4: "<strong>查看详情：</strong>点击\"查看\"按钮打开详情弹窗，显示完整的行程信息——包含/不包含项目、时长和价格。",
+    sec3Step5: "<strong>添加到行程：</strong>点击\"+\"按钮或详情弹窗中的\"加入行程\"按钮即可将该行程添加到行程构建器。",
+    sec3Screenshot: "行程目录及筛选控件和行程卡片",
+    sec4Title: "4. 行程构建器",
+    sec4Desc: "行程构建器允许游客将多个行程添加到单日计划中，组建自定义行程。支持完整的拖拽排序功能。",
+    sec4Step1: "<strong>添加行程</strong>——从目录中点击\"+\"或将行程卡片拖入计划区域。",
+    sec4Step2: "<strong>自定义每站：</strong>为计划中的每个行程设置开始时间、时长（小时）、参与人数和可选备注。",
+    sec4Step3: "<strong>调整顺序</strong>——上下拖动计划项目以更改顺序。",
+    sec4Step4: "<strong>移除</strong>——移除单个行程，或点击\"清空\"重置整个计划。",
+    sec4Step5: "<strong>分享计划：</strong>点击\"分享\"将包含计划的可分享 URL 复制到剪贴板。",
+    sec4Step6: "<strong>预订请求：</strong>点击\"预订请求\"打开预订表单，自动填入您选择的行程、日期、人数和备注。提交后将通过本地邮件客户端生成邮件。",
+    sec4Stats: "底部统计栏显示组装计划的预估总价（¥）和总时长。",
+    sec4Screenshot: "行程构建器界面——含计划项目和统计数据",
+    sec5Title: "5. 评价与常见问题",
+    sec5Desc: "游客故事版块以水平轮播的形式展示评价卡片，每张包含游客姓名、国家、星级评分和双语评价文本。常见问题版块使用响应式网格布局的折叠手风琴项目，每个包含双语的问题和回答。",
+    sec5Note: "这两个版块均由 IndexedDB 动态填充，可通过管理后台完全管理。",
+    sec6Title: "6. 熊猫聊天助手",
+    sec6Desc: "右下角的浮动聊天按钮打开熊猫教授聊天助手。",
+    sec6Step1: "<strong>打开：</strong>点击右下角的圆形熊猫按钮，聊天面板滑入并显示欢迎消息。",
+    sec6Step2: "<strong>快捷回复按钮：</strong>显示三个预设主题按钮（推荐行程、美食信息、熊猫趣闻）。点击任意一个可获得即时回复。",
+    sec6Step3: "<strong>自由输入：</strong>输入任何消息并回车或点击发送按钮，机器人将回复演示消息。",
+    sec6Step4: "<strong>关闭：</strong>点击聊天面板标题栏的 × 按钮关闭面板。",
+    sec6Copy: "所有聊天文本——欢迎消息、快捷问题标签和回复——均可在管理后台的\"设置 > 机器人文案设置\"中配置。",
+    sec6Screenshot: "熊猫聊天助手打开并显示快捷回复选项",
+    sec7Title: "7. 管理后台 — 登录",
+    sec7Desc: "导航到 <code>admin.html</code> 访问管理后台。首先显示受 PIN 码保护的登录界面。",
+    sec7Step1: "<strong>默认 PIN：</strong><kbd>admin</kbd>。输入 PIN 码并点击\"登录\"。",
+    sec7Step2: "登录后，显示包含统计卡片（在售行程、待处理请求、已处理）和标签导航的仪表板。",
+    sec7Step3: "PIN 码可在登录后的\"设置\"标签中更改。",
+    sec7Screenshot: "管理员登录界面",
+    sec7ScreenshotDash: "登录后的管理仪表板",
+    sec8Title: "8. 管理后台 — 内容管理",
+    sec8Desc: "管理仪表板有六个标签页，分别管理不同的内容区域：",
+    sec8Tab1: "<strong>预订请求：</strong>查看提交的预订请求，包含日期、姓名、邮箱、人数、行程列表和状态。可更改状态（待处理 → 已联系 → 已完成）或直接给客人发邮件。",
+    sec8Tab2: "<strong>路线管理：</strong>添加、编辑或删除行程。每个行程包含双语标题/描述、价格、时长、图片链接、标签、热门切换和展示/隐藏状态。",
+    sec8Tab3: "<strong>图片库：</strong>上传图片（以 base64 存储在 IndexedDB 中）。复制图片 URL 用于行程卡片。",
+    sec8Tab4: "<strong>设置：</strong>更改管理员 PIN、编辑网站名称、联系邮箱/电话、品牌 Logo 链接、社交媒体链接以及所有聊天机器人文案（双语欢迎消息、快捷问题标签和回复）。",
+    sec8Tab5: "<strong>游客评价：</strong>添加/编辑/删除游客评价，包含姓名、国家和双语评价文本。",
+    sec8Tab6: "<strong>常见问题：</strong>添加/编辑/删除常见问题项目，包含双语问题和回答文本。",
+    sec9Title: "9. 国际化 (i18n)",
+    sec9Desc: "整个系统支持英文和中文。以下是 i18n 系统的工作原理：",
+    sec9How1: "所有用户界面文本存储在 <code>js/data.js</code> 的 <code>translations</code> 对象中，包含 <code>en</code> 和 <code>zh</code> 键。",
+    sec9How2: "HTML 元素使用 <code>data-i18n=\"keyName\"</code> 属性。<code>applyTranslations()</code> 函数扫描这些属性并替换文本内容。",
+    sec9How3: "对于 HTML 属性（如 <code>aria-label</code>），使用 <code>data-i18n-attr=\"aria-label:keyName\"</code>。",
+    sec9How4: "<code>js/app.js</code> 中的 <code>t(key)</code> 函数解析翻译，如果缺少中文键则回退到英文。",
+    sec9How5: "语言切换将选择持久化到 <code>localStorage</code>，键名为 <code>pp_lang</code>。",
+    sec9How6: "管理后台使用 <code>data-i18n-admin</code> 属性和 <code>js/admin.js</code> 中的独立翻译应用逻辑。",
+    sec10Title: "10. 数据与持久化",
+    sec10Desc: "所有数据通过 localForage 使用 IndexedDB 在客户端持久化。使用以下存储：",
+    sec10Store1: "<strong>tours</strong> — 行程记录（增删改查，双语）",
+    sec10Store2: "<strong>requests</strong> — 游客提交的预订请求",
+    sec10Store3: "<strong>meta</strong> — 管理员 PIN 哈希、网站设置、种子标志",
+    sec10Store4: "<strong>faqs</strong> — 常见问题项目（双语）",
+    sec10Store5: "<strong>reviews</strong> — 游客评价（双语）",
+    sec10Store6: "<strong>images</strong> — 上传的图片库图片（base64）",
+    sec10Store7: "<strong>facts</strong> — 聊天助手的熊猫趣闻",
+    sec10Warning: "⚠️ 清除浏览器数据将删除所有存储的内容。下次访问时，将自动恢复默认种子数据。",
+    sec11Title: "11. 主题系统",
+    sec11Desc: "提供三种内置主题，可从右上角导航栏的下拉菜单中选择：",
+    sec11T1: "<strong>翡翠</strong> — 默认浅色主题，绿色强调色。",
+    sec11T2: "<strong>森林</strong> — 深色主题，深绿色调。",
+    sec11T3: "<strong>竹林</strong> — 自定义暖色主题，采用 <code>style.css</code> 中定义的四川风格的自然泥土色调。",
+    sec11Persist: "主题选择持久化在 <code>localStorage</code>（键名：<code>pp_theme</code>）。",
+    footerText: "熊猫教授用户手册 — 2026年生成"
+  }
+};
+
+let lang = localStorage.getItem('pp_lang') || 'en';
+
+function mt(key) {
+  return M[lang]?.[key] || M.en[key] || key;
+}
+
+function applyManualI18n() {
+  document.documentElement.setAttribute('lang', lang);
+  document.getElementById('pageTitle').textContent = mt('pageTitle');
+  document.getElementById('metaDesc').setAttribute('content', mt('metaDesc'));
+  document.querySelectorAll('[data-m]').forEach(el => {
+    el.innerHTML = mt(el.getAttribute('data-m'));
+  });
+  const langBtn = document.getElementById('manualLangBtn');
+  langBtn.textContent = mt('langToggle');
+  langBtn.setAttribute('aria-label', mt('langAriaLabel'));
+  const nav = document.querySelector('nav[data-manual-nav]');
+  if (nav) nav.setAttribute('aria-label', mt('navAriaLabel'));
+  const brand = document.getElementById('manualBrandLink');
+  if (brand) brand.setAttribute('aria-label', mt('brandAriaLabel'));
+}
+
+function toggleManualLang() {
+  lang = lang === 'en' ? 'zh' : 'en';
+  localStorage.setItem('pp_lang', lang);
+  applyManualI18n();
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  applyManualI18n();
+  if (typeof lucide !== 'undefined') lucide.createIcons();
+});
+</script>
+
+<!-- ======================== NAVBAR ======================== -->
+<nav class="navbar navbar-glass sticky top-0 z-50 w-full px-4 sm:px-8 no-print" data-manual-nav aria-label="Manual navigation">
+  <div class="navbar-start">
+    <a href="index.html" id="manualBrandLink" class="brand-lockup group" aria-label="Panda Professor — Home">
+      <img src="logo.png" alt="" class="brand-logo" aria-hidden="true">
+      <span class="brand-title font-bold tracking-tight hidden sm:inline-flex truncate group-hover:text-primary transition-colors">Panda Professor</span>
+    </a>
+  </div>
+  <div class="navbar-end gap-2">
+    <a href="index.html" class="btn btn-ghost btn-sm">
+      <i data-lucide="arrow-left" class="w-4 h-4 mr-1" aria-hidden="true"></i>
+      <span data-m="backToSite">Back to Site</span>
+    </a>
+    <button id="manualLangBtn" class="btn btn-outline btn-sm font-bold w-14" type="button" onclick="toggleManualLang()" aria-label="Switch to Chinese">中文</button>
+  </div>
+</nav>
+
+<main id="manual-main" tabindex="-1" class="flex-1">
+<!-- ======================== HERO ======================== -->
+<header class="manual-hero py-16 px-4 sm:px-8 text-center">
+  <div class="max-w-3xl mx-auto">
+    <div class="flex justify-center mb-6">
+      <div class="w-20 h-20 rounded-full bg-white shadow-xl flex items-center justify-center p-3">
+        <img src="logo.png" alt="" class="w-full h-full object-contain">
+      </div>
+    </div>
+    <h1 class="text-4xl sm:text-5xl font-extrabold tracking-tight mb-3" data-m="manualTitle">User Manual</h1>
+    <p class="text-lg text-base-content/70 max-w-xl mx-auto" data-m="manualSubtitle">Complete guide to operating the Panda Professor Chengdu Tours website</p>
+  </div>
+</header>
+
+<!-- ======================== TABLE OF CONTENTS ======================== -->
+<nav class="max-w-4xl mx-auto px-4 sm:px-8 py-8" role="doc-toc" aria-label="Table of Contents">
+  <div class="card bg-base-200/50 shadow-sm border border-base-300">
+    <div class="card-body p-6">
+      <h2 class="card-title text-xl mb-4" data-m="tocTitle">Table of Contents</h2>
+      <ol class="space-y-2 text-sm font-medium list-none pl-0">
+        <li><a href="#sec1" class="link link-hover toc-link inline-block" data-m="sec1Title">1. System Overview</a></li>
+        <li><a href="#sec2" class="link link-hover toc-link inline-block" data-m="sec2Title">2. Homepage & Navigation</a></li>
+        <li><a href="#sec3" class="link link-hover toc-link inline-block" data-m="sec3Title">3. Tour Catalogue</a></li>
+        <li><a href="#sec4" class="link link-hover toc-link inline-block" data-m="sec4Title">4. Day Builder</a></li>
+        <li><a href="#sec5" class="link link-hover toc-link inline-block" data-m="sec5Title">5. Reviews & FAQ</a></li>
+        <li><a href="#sec6" class="link link-hover toc-link inline-block" data-m="sec6Title">6. Panda Chat Widget</a></li>
+        <li><a href="#sec7" class="link link-hover toc-link inline-block" data-m="sec7Title">7. Admin Dashboard — Login</a></li>
+        <li><a href="#sec8" class="link link-hover toc-link inline-block" data-m="sec8Title">8. Admin — Managing Content</a></li>
+        <li><a href="#sec9" class="link link-hover toc-link inline-block" data-m="sec9Title">9. Internationalization (i18n)</a></li>
+        <li><a href="#sec10" class="link link-hover toc-link inline-block" data-m="sec10Title">10. Data & Persistence</a></li>
+        <li><a href="#sec11" class="link link-hover toc-link inline-block" data-m="sec11Title">11. Theme System</a></li>
+      </ol>
+    </div>
+  </div>
+</nav>
+
+<!-- ======================== SECTIONS ======================== -->
+<div class="max-w-4xl mx-auto px-4 sm:px-8 pb-16 space-y-16">
+
+  <!-- Section 1 -->
+  <section id="sec1" class="section-anchor space-y-4">
+    <h2 class="text-2xl font-extrabold flex items-center gap-3"><i data-lucide="layout-dashboard" class="w-7 h-7 text-primary"></i> <span data-m="sec1Title">1. System Overview</span></h2>
+    <p data-m="sec1Desc"></p>
+    <ul class="list-disc pl-6 space-y-2"><li data-m="sec1Bullet1"></li><li data-m="sec1Bullet2"></li></ul>
+    <div class="alert alert-info text-sm"><i data-lucide="database" class="w-4 h-4"></i><span data-m="sec1Data"></span></div>
+    <p class="text-sm opacity-70" data-m="sec1Stack"></p>
+  </section>
+
+  <!-- Section 2 -->
+  <section id="sec2" class="section-anchor space-y-4">
+    <h2 class="text-2xl font-extrabold flex items-center gap-3"><i data-lucide="home" class="w-7 h-7 text-primary"></i> <span data-m="sec2Title">2. Homepage & Navigation</span></h2>
+    <p data-m="sec2Desc"></p>
+    <ul class="list-disc pl-6 space-y-2"><li data-m="sec2Nav1"></li><li data-m="sec2Nav2"></li><li data-m="sec2Nav3"></li><li data-m="sec2Nav4"></li></ul>
+    <figure class="screenshot-frame"><img src="images/manual/hero_en.png" alt="Hero EN" loading="lazy"><figcaption class="p-3 text-center text-sm opacity-70 bg-base-200" data-m="sec2Screenshot"></figcaption></figure>
+    <figure class="screenshot-frame"><img src="images/manual/hero_zh.png" alt="Hero ZH" loading="lazy"><figcaption class="p-3 text-center text-sm opacity-70 bg-base-200" data-m="sec2ScreenshotZh"></figcaption></figure>
+  </section>
+
+  <!-- Section 3 -->
+  <section id="sec3" class="section-anchor space-y-4">
+    <h2 class="text-2xl font-extrabold flex items-center gap-3"><i data-lucide="map" class="w-7 h-7 text-primary"></i> <span data-m="sec3Title">3. Tour Catalogue</span></h2>
+    <p data-m="sec3Desc"></p>
+    <div class="space-y-3">
+      <div class="flex items-start gap-3"><span class="step-number bg-primary text-primary-content">1</span><p data-m="sec3Step1"></p></div>
+      <div class="flex items-start gap-3"><span class="step-number bg-primary text-primary-content">2</span><p data-m="sec3Step2"></p></div>
+      <div class="flex items-start gap-3"><span class="step-number bg-primary text-primary-content">3</span><p data-m="sec3Step3"></p></div>
+      <div class="flex items-start gap-3"><span class="step-number bg-primary text-primary-content">4</span><p data-m="sec3Step4"></p></div>
+      <div class="flex items-start gap-3"><span class="step-number bg-primary text-primary-content">5</span><p data-m="sec3Step5"></p></div>
+    </div>
+    <figure class="screenshot-frame"><img src="images/manual/tours.png" alt="Tours" loading="lazy"><figcaption class="p-3 text-center text-sm opacity-70 bg-base-200" data-m="sec3Screenshot"></figcaption></figure>
+  </section>
+
+  <!-- Section 4 -->
+  <section id="sec4" class="section-anchor space-y-4">
+    <h2 class="text-2xl font-extrabold flex items-center gap-3"><i data-lucide="calendar-check" class="w-7 h-7 text-primary"></i> <span data-m="sec4Title">4. Day Builder</span></h2>
+    <p data-m="sec4Desc"></p>
+    <div class="space-y-3">
+      <div class="flex items-start gap-3"><span class="step-number bg-secondary text-secondary-content">1</span><p data-m="sec4Step1"></p></div>
+      <div class="flex items-start gap-3"><span class="step-number bg-secondary text-secondary-content">2</span><p data-m="sec4Step2"></p></div>
+      <div class="flex items-start gap-3"><span class="step-number bg-secondary text-secondary-content">3</span><p data-m="sec4Step3"></p></div>
+      <div class="flex items-start gap-3"><span class="step-number bg-secondary text-secondary-content">4</span><p data-m="sec4Step4"></p></div>
+      <div class="flex items-start gap-3"><span class="step-number bg-secondary text-secondary-content">5</span><p data-m="sec4Step5"></p></div>
+      <div class="flex items-start gap-3"><span class="step-number bg-secondary text-secondary-content">6</span><p data-m="sec4Step6"></p></div>
+    </div>
+    <div class="alert alert-success text-sm"><i data-lucide="bar-chart-3" class="w-4 h-4"></i><span data-m="sec4Stats"></span></div>
+    <figure class="screenshot-frame"><img src="images/manual/daybuilder.png" alt="Day Builder" loading="lazy"><figcaption class="p-3 text-center text-sm opacity-70 bg-base-200" data-m="sec4Screenshot"></figcaption></figure>
+  </section>
+
+  <!-- Section 5 -->
+  <section id="sec5" class="section-anchor space-y-4">
+    <h2 class="text-2xl font-extrabold flex items-center gap-3"><i data-lucide="message-square-quote" class="w-7 h-7 text-primary"></i> <span data-m="sec5Title">5. Reviews & FAQ</span></h2>
+    <p data-m="sec5Desc"></p>
+    <div class="alert text-sm"><i data-lucide="info" class="w-4 h-4"></i><span data-m="sec5Note"></span></div>
+  </section>
+
+  <!-- Section 6 -->
+  <section id="sec6" class="section-anchor space-y-4">
+    <h2 class="text-2xl font-extrabold flex items-center gap-3"><i data-lucide="message-circle" class="w-7 h-7 text-primary"></i> <span data-m="sec6Title">6. Panda Chat Widget</span></h2>
+    <p data-m="sec6Desc"></p>
+    <div class="space-y-3">
+      <div class="flex items-start gap-3"><span class="step-number bg-accent text-accent-content">1</span><p data-m="sec6Step1"></p></div>
+      <div class="flex items-start gap-3"><span class="step-number bg-accent text-accent-content">2</span><p data-m="sec6Step2"></p></div>
+      <div class="flex items-start gap-3"><span class="step-number bg-accent text-accent-content">3</span><p data-m="sec6Step3"></p></div>
+      <div class="flex items-start gap-3"><span class="step-number bg-accent text-accent-content">4</span><p data-m="sec6Step4"></p></div>
+    </div>
+    <div class="alert alert-warning text-sm"><i data-lucide="settings" class="w-4 h-4"></i><span data-m="sec6Copy"></span></div>
+    <figure class="screenshot-frame"><img src="images/manual/chat.png" alt="Chat Widget" loading="lazy"><figcaption class="p-3 text-center text-sm opacity-70 bg-base-200" data-m="sec6Screenshot"></figcaption></figure>
+  </section>
+
+  <!-- Section 7 -->
+  <section id="sec7" class="section-anchor space-y-4">
+    <h2 class="text-2xl font-extrabold flex items-center gap-3"><i data-lucide="shield" class="w-7 h-7 text-primary"></i> <span data-m="sec7Title">7. Admin Dashboard — Login</span></h2>
+    <p data-m="sec7Desc"></p>
+    <div class="space-y-3">
+      <div class="flex items-start gap-3"><span class="step-number bg-warning text-warning-content">1</span><p data-m="sec7Step1"></p></div>
+      <div class="flex items-start gap-3"><span class="step-number bg-warning text-warning-content">2</span><p data-m="sec7Step2"></p></div>
+      <div class="flex items-start gap-3"><span class="step-number bg-warning text-warning-content">3</span><p data-m="sec7Step3"></p></div>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <figure class="screenshot-frame"><img src="images/manual/admin_login.png" alt="Admin Login" loading="lazy"><figcaption class="p-3 text-center text-sm opacity-70 bg-base-200" data-m="sec7Screenshot"></figcaption></figure>
+      <figure class="screenshot-frame"><img src="images/manual/admin_dashboard.png" alt="Admin Dashboard" loading="lazy"><figcaption class="p-3 text-center text-sm opacity-70 bg-base-200" data-m="sec7ScreenshotDash"></figcaption></figure>
+    </div>
+  </section>
+
+  <!-- Section 8 -->
+  <section id="sec8" class="section-anchor space-y-4">
+    <h2 class="text-2xl font-extrabold flex items-center gap-3"><i data-lucide="settings-2" class="w-7 h-7 text-primary"></i> <span data-m="sec8Title">8. Admin — Managing Content</span></h2>
+    <p data-m="sec8Desc"></p>
+    <div class="space-y-3">
+      <div class="card bg-base-200/50 p-4 border border-base-300"><p data-m="sec8Tab1"></p></div>
+      <div class="card bg-base-200/50 p-4 border border-base-300"><p data-m="sec8Tab2"></p></div>
+      <div class="card bg-base-200/50 p-4 border border-base-300"><p data-m="sec8Tab3"></p></div>
+      <div class="card bg-base-200/50 p-4 border border-base-300"><p data-m="sec8Tab4"></p></div>
+      <div class="card bg-base-200/50 p-4 border border-base-300"><p data-m="sec8Tab5"></p></div>
+      <div class="card bg-base-200/50 p-4 border border-base-300"><p data-m="sec8Tab6"></p></div>
+    </div>
+  </section>
+
+  <!-- Section 9 -->
+  <section id="sec9" class="section-anchor space-y-4">
+    <h2 class="text-2xl font-extrabold flex items-center gap-3"><i data-lucide="languages" class="w-7 h-7 text-primary"></i> <span data-m="sec9Title">9. Internationalization (i18n)</span></h2>
+    <p data-m="sec9Desc"></p>
+    <div class="space-y-3">
+      <div class="flex items-start gap-3"><span class="step-number bg-info text-info-content">1</span><p data-m="sec9How1"></p></div>
+      <div class="flex items-start gap-3"><span class="step-number bg-info text-info-content">2</span><p data-m="sec9How2"></p></div>
+      <div class="flex items-start gap-3"><span class="step-number bg-info text-info-content">3</span><p data-m="sec9How3"></p></div>
+      <div class="flex items-start gap-3"><span class="step-number bg-info text-info-content">4</span><p data-m="sec9How4"></p></div>
+      <div class="flex items-start gap-3"><span class="step-number bg-info text-info-content">5</span><p data-m="sec9How5"></p></div>
+      <div class="flex items-start gap-3"><span class="step-number bg-info text-info-content">6</span><p data-m="sec9How6"></p></div>
+    </div>
+  </section>
+
+  <!-- Section 10 -->
+  <section id="sec10" class="section-anchor space-y-4">
+    <h2 class="text-2xl font-extrabold flex items-center gap-3"><i data-lucide="hard-drive" class="w-7 h-7 text-primary"></i> <span data-m="sec10Title">10. Data & Persistence</span></h2>
+    <p data-m="sec10Desc"></p>
+    <div class="overflow-x-auto">
+      <table class="table table-zebra">
+        <thead><tr><th data-m="tableHeaderStore">Store</th><th data-m="tableHeaderDesc">Description</th></tr></thead>
+        <tbody>
+          <tr><td data-m="sec10Store1"></td><td></td></tr>
+          <tr><td data-m="sec10Store2"></td><td></td></tr>
+          <tr><td data-m="sec10Store3"></td><td></td></tr>
+          <tr><td data-m="sec10Store4"></td><td></td></tr>
+          <tr><td data-m="sec10Store5"></td><td></td></tr>
+          <tr><td data-m="sec10Store6"></td><td></td></tr>
+          <tr><td data-m="sec10Store7"></td><td></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="alert alert-warning text-sm"><i data-lucide="alert-triangle" class="w-4 h-4"></i><span data-m="sec10Warning"></span></div>
+  </section>
+
+  <!-- Section 11 -->
+  <section id="sec11" class="section-anchor space-y-4">
+    <h2 class="text-2xl font-extrabold flex items-center gap-3"><i data-lucide="palette" class="w-7 h-7 text-primary"></i> <span data-m="sec11Title">11. Theme System</span></h2>
+    <p data-m="sec11Desc"></p>
+    <ul class="list-disc pl-6 space-y-2"><li data-m="sec11T1"></li><li data-m="sec11T2"></li><li data-m="sec11T3"></li></ul>
+    <p class="text-sm opacity-70" data-m="sec11Persist"></p>
+  </section>
+
+</div>
+</main>
+
+<!-- ======================== FOOTER ======================== -->
+<footer class="footer footer-center p-6 bg-base-200 text-base-content border-t border-base-content/10">
+  <p class="text-sm opacity-60" data-m="footerText">Panda Professor User Manual — Generated 2026</p>
+</footer>
+
+</body>
+</html>

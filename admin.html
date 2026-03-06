@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="emerald">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title data-i18n-admin="adminPageTitle">Panda Professor — Admin Dashboard</title>
+  <meta name="description" content="Admin dashboard for Panda Professor Chengdu Tours." data-i18n-admin="adminMetaDescription">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- DaisyUI 5 CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/daisyui@5.3.10/daisyui.css" rel="stylesheet" type="text/css" />
+  <link href="https://cdn.jsdelivr.net/npm/daisyui@5.3.10/themes.css" rel="stylesheet" type="text/css" />
+
+  <!-- Tailwind CSS 4 CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4.0.14/dist/index.global.js"></script>
+
+  <!-- Icons (Lucide) local script -->
+  <script src="js/lucide.min.js"></script>
+
+  <!-- localForage (IndexedDB) CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/localforage@1.10.0/dist/localforage.min.js"></script>
+
+  <style>
+    :root {
+      --admin-brand-green: #1f9d55;
+    }
+
+    body { font-family: 'Inter', system-ui, -apple-system, sans-serif; }
+
+    .fade-in { animation: fadeIn 0.4s ease both; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(0.5rem); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .admin-heading {
+      font-size: clamp(1.05rem, 2.5vw, 1.4rem);
+      font-weight: 700;
+      line-height: 1.2;
+    }
+
+    .admin-nav {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+
+    .admin-nav-actions {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 0.5rem;
+    }
+
+    .admin-tab-strip {
+      display: flex;
+      overflow-x: auto;
+      overflow-y: hidden;
+      scrollbar-width: thin;
+      -webkit-overflow-scrolling: touch;
+      padding-bottom: 0.25rem;
+      gap: 0.25rem;
+    }
+
+    .admin-tab-strip::-webkit-scrollbar {
+      height: 0.35rem;
+    }
+
+    .admin-tab-strip .tab {
+      white-space: nowrap;
+    }
+
+    .admin-card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1rem;
+    }
+
+    .admin-social-legend-icon {
+      width: 1rem;
+      height: 1rem;
+      display: inline-block;
+      vertical-align: middle;
+    }
+
+    .admin-settings-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .admin-social-link {
+      width: 0.95rem;
+      height: 0.95rem;
+      flex: 0 0 auto;
+    }
+
+    .admin-social-link-btn .admin-social-link {
+      width: 1rem;
+      height: 1rem;
+    }
+
+    .modal-responsive .modal-box {
+      width: min(95vw, 720px);
+      max-width: 95vw;
+    }
+
+    @media (min-width: 768px) {
+      .admin-tab-strip {
+        overflow: visible;
+      }
+    }
+
+    @media (min-width: 768px) and (max-width: 1023px) {
+      .admin-settings-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .admin-settings-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+  </style>
+  </head>
+<body class="bg-base-200 text-base-content min-h-screen">
+
+  <!-- ======================== LOGIN VIEW ======================== -->
+  <div id="loginView" class="min-h-screen flex items-center justify-center p-4">
+    <div class="card w-full max-w-sm bg-base-100 shadow-2xl fade-in">
+      <div class="card-body items-center text-center">
+        <div class="w-24 h-24 rounded-full bg-primary/10 flex items-center justify-center mb-4">
+          <img src="logo.png" alt="Panda Professor" class="w-20 h-20 object-contain" data-admin-logo />
+        </div>
+        <h1 class="card-title text-2xl font-extrabold" data-i18n-admin="adminAdminLogin">Admin Login</h1>
+        <p class="text-sm opacity-70 mb-4" data-i18n-admin="adminPinHint">Enter your admin PIN to access the dashboard.</p>
+
+        <div id="loginError" class="alert alert-error text-sm hidden mb-4">
+          <i data-lucide="alert-circle" class="w-4 h-4"></i>
+          <span data-i18n-admin="adminInvalidPin">Invalid PIN. Please try again.</span>
+        </div>
+
+        <form id="loginForm" class="w-full" novalidate>
+          <fieldset class="fieldset mb-4">
+            <legend class="fieldset-legend font-semibold" data-i18n-admin="adminPinLabel">Admin PIN</legend>
+            <input type="password" id="pinInput" class="input input-bordered w-full text-center text-2xl tracking-[0.5em] font-mono" required maxlength="8" placeholder="••••••" autofocus />
+          </fieldset>
+          <button type="submit" class="btn btn-primary btn-block" data-admin-i18n-attr="aria-label:adminSignInAriaLabel">
+            <i data-lucide="lock" class="w-4 h-4 mr-2"></i> <span data-i18n-admin="adminSignIn">Sign In</span>
+          </button>
+        </form>
+
+        <div class="flex justify-center">
+          <button id="adminLangToggle" class="btn btn-sm btn-ghost" type="button" data-admin-action="toggle-language" data-admin-i18n-attr="aria-label:adminLanguageToggleAriaLabel">EN</button>
+        </div>
+        <div class="divider text-xs opacity-50" data-i18n-admin="adminHint">HINT</div>
+        <p class="text-xs opacity-50"><span data-i18n-admin="adminDefaultPin">Default PIN:</span> <kbd class="kbd kbd-sm"><span data-i18n-admin="adminDefaultPinValue">admin</span></kbd></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================== DASHBOARD VIEW ======================== -->
+  <div id="dashboardView" class="hidden">
+    <!-- Top Navbar -->
+	    <nav class="navbar admin-nav bg-base-100 shadow-sm px-4 sm:px-8 border-b border-base-200">
+	      <div class="navbar-start">
+	        <a href="index.html" class="flex items-center gap-2 group" data-admin-i18n-attr="aria-label:adminHomeAriaLabel">
+	          <img src="logo.png" alt="Panda Professor" class="w-10 h-10 object-contain" data-admin-logo />
+	          <span class="font-bold text-lg tracking-tight">Panda Professor <span class="badge badge-primary badge-sm ml-1" data-i18n-admin="adminAdminText">Admin</span></span>
+	        </a>
+	      </div>
+	      <div class="navbar-end admin-nav-actions">
+	        <a href="index.html" class="btn btn-ghost btn-sm" data-admin-i18n-attr="aria-label:adminViewSiteAriaLabel">
+	          <i data-lucide="globe" class="w-4 h-4 mr-1"></i> <span data-i18n-admin="adminViewSite">View Site</span>
+	        </a>
+	        <button id="adminLangToggleDashboard" class="btn btn-outline btn-sm" type="button" data-admin-action="toggle-language" data-admin-i18n-attr="aria-label:adminLanguageToggleAriaLabel">EN</button>
+	        <button id="adminLogoutBtn" class="btn btn-outline btn-sm btn-error" type="button" data-admin-action="logout" data-admin-i18n-attr="aria-label:adminLogoutAriaLabel">
+	          <i data-lucide="log-out" class="w-4 h-4 mr-1"></i> <span data-i18n-admin="adminLogout">Logout</span>
+	        </button>
+	      </div>
+    </nav>
+
+    <!-- Dashboard Content -->
+    <div class="max-w-7xl mx-auto p-4 sm:p-8">
+
+      <!-- Stats Row -->
+      <div class="grid admin-card-grid mb-8 fade-in">
+        <div class="stat bg-base-100 rounded-box shadow-sm border border-base-200">
+          <div class="stat-figure text-primary"><i data-lucide="map-pin" class="w-8 h-8"></i></div>
+          <div class="stat-title" data-i18n-admin="adminActiveTours">Active Tours</div>
+          <div class="stat-value text-primary" id="statTourCount">0</div>
+        </div>
+        <div class="stat bg-base-100 rounded-box shadow-sm border border-base-200">
+          <div class="stat-figure text-warning"><i data-lucide="inbox" class="w-8 h-8"></i></div>
+          <div class="stat-title" data-i18n-admin="adminPendingRequests">Pending Requests</div>
+          <div class="stat-value text-warning" id="statPendingCount">0</div>
+        </div>
+        <div class="stat bg-base-100 rounded-box shadow-sm border border-base-200">
+          <div class="stat-figure text-success"><i data-lucide="check-circle" class="w-8 h-8"></i></div>
+          <div class="stat-title" data-i18n-admin="adminResolved">Resolved</div>
+          <div class="stat-value text-success" id="statResolvedCount">0</div>
+        </div>
+      </div>
+
+      <!-- Tabs -->
+      <div role="tablist" class="tabs tabs-box mb-6 admin-tab-strip">
+        <button role="tab" class="tab tab-active" type="button" data-admin-tab="requests" data-admin-action="switch-tab">
+          <i data-lucide="inbox" class="w-4 h-4 mr-2"></i> <span data-i18n-admin="adminBookingRequests">Booking Requests</span>
+        </button>
+        <button role="tab" class="tab" type="button" data-admin-tab="tours" data-admin-action="switch-tab">
+          <i data-lucide="map" class="w-4 h-4 mr-2"></i> <span data-i18n-admin="adminTourOfferings">Tour Offerings</span>
+        </button>
+        <button role="tab" class="tab" type="button" data-admin-tab="gallery" data-admin-action="switch-tab">
+          <i data-lucide="image" class="w-4 h-4 mr-2"></i> <span data-i18n-admin="adminGallery">Gallery</span>
+        </button>
+        <button role="tab" class="tab" type="button" data-admin-tab="settings" data-admin-action="switch-tab">
+          <i data-lucide="settings" class="w-4 h-4 mr-2"></i> <span data-i18n-admin="adminSettings">Settings</span>
+        </button>
+        <button role="tab" class="tab" type="button" data-admin-tab="reviews" data-admin-action="switch-tab">
+          <i data-lucide="message-square-quote" class="w-4 h-4 mr-2"></i> <span data-i18n-admin="adminReviews">Reviews</span>
+        </button>
+        <button role="tab" class="tab" type="button" data-admin-tab="faqs" data-admin-action="switch-tab">
+          <i data-lucide="help-circle" class="w-4 h-4 mr-2"></i> <span data-i18n-admin="adminFaqs">FAQs</span>
+        </button>
+      </div>
+
+      <!-- ======= Requests Tab ======= -->
+      <div id="requestsTab" class="fade-in">
+        <div class="card bg-base-100 shadow-sm border border-base-200">
+          <div class="card-body p-0">
+            <div class="overflow-x-auto">
+              <table class="table table-zebra">
+                <thead>
+                  <tr>
+                    <th data-i18n-admin="adminDate">Date</th>
+                    <th data-i18n-admin="adminName">Name</th>
+                    <th data-i18n-admin="adminEmail">Email</th>
+                    <th data-i18n-admin="adminGuests">Guests</th>
+                    <th data-i18n-admin="adminTours">Tours</th>
+                    <th data-i18n-admin="adminStatus">Status</th>
+                    <th data-i18n-admin="adminActions">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="requestsTableBody">
+                  <!-- Populated by JS -->
+                </tbody>
+              </table>
+            </div>
+            <div id="noRequests" class="hidden p-12 text-center opacity-60">
+              <i data-lucide="inbox" class="w-12 h-12 mx-auto mb-4 opacity-30"></i>
+              <p class="text-lg font-medium" data-i18n-admin="adminNoBookingRequests">No booking requests yet.</p>
+              <p class="text-sm" data-i18n-admin="adminNoRequestsSub">Requests submitted on the public site will appear here.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ======= Tours Tab ======= -->
+      <div id="toursTab" class="hidden fade-in">
+        <div class="flex justify-between items-center mb-4">
+              <h2 class="admin-heading" data-i18n-admin="adminTourOfferings">Tour Offerings</h2>
+          <button id="openTourFormBtn" class="btn btn-primary btn-sm" type="button" data-admin-action="open-tour-form">
+            <i data-lucide="plus" class="w-4 h-4 mr-1"></i> <span data-i18n-admin="adminAddNewTour">Add New Tour</span>
+          </button>
+        </div>
+
+        <div id="toursAdminGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+      <!-- ======= Gallery Tab ======= -->
+      <div id="galleryTab" class="hidden fade-in">
+        <div class="flex justify-between items-center mb-4">
+          <h2 class="admin-heading" data-i18n-admin="adminGallery">Image Gallery</h2>
+          <div class="flex gap-2">
+            <input type="file" id="imageUploadInput" class="hidden" accept="image/*" />
+            <button id="imageUploadButton" class="btn btn-primary btn-sm" type="button" data-admin-action="open-image-uploader">
+              <i data-lucide="upload" class="w-4 h-4 mr-1"></i> <span data-i18n-admin="adminUploadImage">Upload Image</span>
+            </button>
+          </div>
+        </div>
+        <div id="galleryAdminGrid" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+      <!-- ======= Settings Tab ======= -->
+      <div id="settingsTab" class="hidden fade-in space-y-6">
+        <div class="card bg-base-100 shadow-sm border border-base-200">
+          <div class="card-body">
+            <h2 class="card-title mb-4"><i data-lucide="shield" class="w-5 h-5 text-primary"></i> <span data-i18n-admin="adminChangeAdminPin">Change Admin PIN</span></h2>
+            <form id="adminPinForm" class="flex flex-col sm:flex-row gap-4 items-end" novalidate>
+              <fieldset class="fieldset flex-grow w-full">
+                <legend class="fieldset-legend font-semibold" data-i18n-admin="adminNewPin">New PIN</legend>
+                <input type="password" id="newPinInput" class="input input-bordered w-full" required minlength="4" data-i18n-admin="adminNewPinPlaceholder" placeholder="Enter new PIN" />
+              </fieldset>
+              <button type="submit" class="btn btn-primary w-full sm:w-auto"><span data-i18n-admin="adminUpdatePin">Update PIN</span></button>
+            </form>
+            <div id="pinSuccessMsg" class="text-success text-sm mt-2 hidden"><i data-lucide="check" class="w-4 h-4 inline"></i> <span data-i18n-admin="adminPinUpdated">PIN updated successfully!</span></div>
+          </div>
+        </div>
+
+        <div class="card bg-base-100 shadow-sm border border-base-200">
+          <div class="card-body">
+            <h2 class="card-title mb-4"><i data-lucide="globe" class="w-5 h-5 text-primary"></i> <span data-i18n-admin="adminSiteContact">Site Details & Contact Info</span></h2>
+            <form id="adminSettingsForm" class="space-y-4" novalidate>
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <fieldset class="fieldset">
+                  <legend class="fieldset-legend font-semibold" data-i18n-admin="adminSiteName">Site Name</legend>
+                  <input type="text" id="set_siteName" class="input input-bordered w-full" required />
+                </fieldset>
+                <fieldset class="fieldset">
+                  <legend class="fieldset-legend font-semibold" data-i18n-admin="adminContactEmail">Contact Email</legend>
+                  <input type="email" id="set_email" class="input input-bordered w-full" required />
+                </fieldset>
+                <fieldset class="fieldset">
+                  <legend class="fieldset-legend font-semibold" data-i18n-admin="adminContactPhone">Contact Phone</legend>
+                  <input type="text" id="set_phone" class="input input-bordered w-full" required />
+                </fieldset>
+                <fieldset class="fieldset sm:col-span-3">
+                  <legend class="fieldset-legend font-semibold" data-i18n-admin="adminBrandLogo">Brand Logo URL</legend>
+                  <div class="flex flex-col sm:flex-row gap-3 items-start">
+                    <img src="logo.png" alt="Brand logo preview" class="w-12 h-12 rounded-lg object-contain bg-base-200 border border-base-300 p-1" id="set_logoPreview" data-admin-logo />
+                    <div class="flex-1 w-full">
+                      <input type="text" id="set_logoUrl" class="input input-bordered w-full" data-i18n-admin="adminBrandLogoPlaceholder" placeholder="logo.png or https://cdn.example.com/logo.svg" />
+                      <p class="text-xs opacity-70 mt-1" data-i18n-admin="adminBrandLogoHint">Used across header, footer, chat, and admin branding.</p>
+                    </div>
+                  </div>
+                </fieldset>
+              </div>
+
+              <div class="divider" data-i18n-admin="adminSocialLinks">Social Media Links</div>
+              
+        <div class="grid admin-settings-grid gap-4">
+                <fieldset class="fieldset">
+                  <legend class="fieldset-legend font-semibold">
+                    <img src="icons/instagram.svg" alt="" class="admin-social-legend-icon mr-1" aria-hidden="true" />
+                    <span data-i18n-admin="adminInstagram">Instagram</span>
+                  </legend>
+                  <input type="text" id="set_instagram" class="input input-bordered w-full" data-i18n-admin="adminInstagramPlaceholder" placeholder="https://instagram.com/..." />
+                </fieldset>
+                <fieldset class="fieldset">
+                  <legend class="fieldset-legend font-semibold">
+                    <img src="icons/facebook.svg" alt="" class="admin-social-legend-icon mr-1" aria-hidden="true" />
+                    <span data-i18n-admin="adminFacebook">Facebook</span>
+                  </legend>
+                  <input type="text" id="set_facebook" class="input input-bordered w-full" data-i18n-admin="adminFacebookPlaceholder" placeholder="https://facebook.com/..." />
+                </fieldset>
+                <fieldset class="fieldset">
+                  <legend class="fieldset-legend font-semibold">
+                    <img src="icons/twitter.svg" alt="" class="admin-social-legend-icon mr-1" aria-hidden="true" />
+                    <span data-i18n-admin="adminTwitter">Twitter / X</span>
+                  </legend>
+                  <input type="text" id="set_twitter" class="input input-bordered w-full" data-i18n-admin="adminTwitterPlaceholder" placeholder="https://twitter.com/..." />
+                </fieldset>
+                <fieldset class="fieldset">
+                  <legend class="fieldset-legend font-semibold">
+                    <img src="icons/wechat.svg" alt="" class="admin-social-legend-icon mr-1" aria-hidden="true" />
+                    <span data-i18n-admin="adminWeChat">WeChat (Username / ID)</span>
+                  </legend>
+                  <input type="text" id="set_wechat" class="input input-bordered w-full" data-i18n-admin="adminWeChatPlaceholder" placeholder="WeChat ID" />
+                </fieldset>
+                <fieldset class="fieldset">
+                  <legend class="fieldset-legend font-semibold">
+                    <img src="icons/weibo.svg" alt="" class="admin-social-legend-icon mr-1" aria-hidden="true" />
+                    <span data-i18n-admin="adminWeibo">Weibo URL</span>
+                  </legend>
+                  <input type="text" id="set_weibo" class="input input-bordered w-full" data-i18n-admin="adminWeiboPlaceholder" placeholder="https://weibo.com/..." />
+                </fieldset>
+                <fieldset class="fieldset">
+                  <legend class="fieldset-legend font-semibold">
+                    <img src="icons/xiaohongshu.svg" alt="" class="admin-social-legend-icon mr-1" aria-hidden="true" />
+                    <span data-i18n-admin="adminXiaohongshu">Xiaohongshu (RED) URL</span>
+                  </legend>
+                  <input type="text" id="set_xiaohongshu" class="input input-bordered w-full" data-i18n-admin="adminXiaohongshuPlaceholder" placeholder="https://xiaohongshu.com/..." />
+                </fieldset>
+              </div>
+
+              <div class="divider" data-i18n-admin="adminChatCopyHeading">Chatbot Copy Settings</div>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-2">
+                <fieldset class="fieldset">
+                  <legend class="fieldset-legend font-semibold" data-i18n-admin="adminChatWelcomeEn">Welcome (English)</legend>
+                  <textarea id="set_chatWelcomeEn" class="textarea textarea-bordered w-full h-24" data-i18n-admin="adminChatWelcomePlaceholder"></textarea>
+                </fieldset>
+                <fieldset class="fieldset">
+                  <legend class="fieldset-legend font-semibold" data-i18n-admin="adminChatWelcomeZh">Welcome (Chinese)</legend>
+                  <textarea id="set_chatWelcomeZh" class="textarea textarea-bordered w-full h-24" data-i18n-admin="adminChatWelcomePlaceholder"></textarea>
+                </fieldset>
+
+                <fieldset class="fieldset">
+                  <legend class="fieldset-legend font-semibold" data-i18n-admin="adminChatBtnToursEn">Quick Ask: Tours (English)</legend>
+                  <input type="text" id="set_chatBtnToursEn" class="input input-bordered w-full" data-i18n-admin="adminChatQuickAskPlaceholder" placeholder="Recommend a tour" />
+                </fieldset>
+                <fieldset class="fieldset">
+                  <legend class="fieldset-legend font-semibold" data-i18n-admin="adminChatBtnToursZh">Quick Ask: Tours (Chinese)</legend>
+                  <input type="text" id="set_chatBtnToursZh" class="input input-bordered w-full" data-i18n-admin="adminChatQuickAskPlaceholder" placeholder="推荐旅行" />
+                </fieldset>
+
+                <fieldset class="fieldset">
+                  <legend class="fieldset-legend font-semibold" data-i18n-admin="adminChatBtnFoodEn">Quick Ask: Food (English)</legend>
+                  <input type="text" id="set_chatBtnFoodEn" class="input input-bordered w-full" data-i18n-admin="adminChatQuickAskPlaceholder" placeholder="What is Chengdu food like?" />
+                </fieldset>
+                <fieldset class="fieldset">
+                  <legend class="fieldset-legend font-semibold" data-i18n-admin="adminChatBtnFoodZh">Quick Ask: Food (Chinese)</legend>
+                  <input type="text" id="set_chatBtnFoodZh" class="input input-bordered w-full" data-i18n-admin="adminChatQuickAskPlaceholder" placeholder="成都美食怎么样？" />
+                </fieldset>
+
+                <fieldset class="fieldset">
+                  <legend class="fieldset-legend font-semibold" data-i18n-admin="adminChatBtnPandaEn">Quick Ask: Panda (English)</legend>
+                  <input type="text" id="set_chatBtnPandaEn" class="input input-bordered w-full" data-i18n-admin="adminChatQuickAskPlaceholder" placeholder="Tell me a panda fact!" />
+                </fieldset>
+                <fieldset class="fieldset">
+                  <legend class="fieldset-legend font-semibold" data-i18n-admin="adminChatBtnPandaZh">Quick Ask: Panda (Chinese)</legend>
+                  <input type="text" id="set_chatBtnPandaZh" class="input input-bordered w-full" data-i18n-admin="adminChatQuickAskPlaceholder" placeholder="告诉我一个熊猫事实！" />
+                </fieldset>
+
+                <fieldset class="fieldset">
+                  <legend class="fieldset-legend font-semibold" data-i18n-admin="adminChatResToursEn">Reply: Tours (English)</legend>
+                  <textarea id="set_chatResToursEn" class="textarea textarea-bordered w-full h-24" data-i18n-admin="adminChatResponsePlaceholder"></textarea>
+                </fieldset>
+                <fieldset class="fieldset">
+                  <legend class="fieldset-legend font-semibold" data-i18n-admin="adminChatResToursZh">Reply: Tours (Chinese)</legend>
+                  <textarea id="set_chatResToursZh" class="textarea textarea-bordered w-full h-24" data-i18n-admin="adminChatResponsePlaceholder"></textarea>
+                </fieldset>
+
+                <fieldset class="fieldset">
+                  <legend class="fieldset-legend font-semibold" data-i18n-admin="adminChatResFoodEn">Reply: Food (English)</legend>
+                  <textarea id="set_chatResFoodEn" class="textarea textarea-bordered w-full h-24" data-i18n-admin="adminChatResponsePlaceholder"></textarea>
+                </fieldset>
+                <fieldset class="fieldset">
+                  <legend class="fieldset-legend font-semibold" data-i18n-admin="adminChatResFoodZh">Reply: Food (Chinese)</legend>
+                  <textarea id="set_chatResFoodZh" class="textarea textarea-bordered w-full h-24" data-i18n-admin="adminChatResponsePlaceholder"></textarea>
+                </fieldset>
+
+                <fieldset class="fieldset">
+                  <legend class="fieldset-legend font-semibold" data-i18n-admin="adminChatResPandaEn">Reply: Panda (English)</legend>
+                  <textarea id="set_chatResPandaEn" class="textarea textarea-bordered w-full h-24" data-i18n-admin="adminChatResponsePlaceholder"></textarea>
+                </fieldset>
+                <fieldset class="fieldset">
+                  <legend class="fieldset-legend font-semibold" data-i18n-admin="adminChatResPandaZh">Reply: Panda (Chinese)</legend>
+                  <textarea id="set_chatResPandaZh" class="textarea textarea-bordered w-full h-24" data-i18n-admin="adminChatResponsePlaceholder"></textarea>
+                </fieldset>
+
+                <fieldset class="fieldset">
+                  <legend class="fieldset-legend font-semibold" data-i18n-admin="adminChatDefaultResponseEn">Fallback Response (English)</legend>
+                  <textarea id="set_chatDefaultResponseEn" class="textarea textarea-bordered w-full h-24" data-i18n-admin="adminChatResponsePlaceholder"></textarea>
+                </fieldset>
+                <fieldset class="fieldset">
+                  <legend class="fieldset-legend font-semibold" data-i18n-admin="adminChatDefaultResponseZh">Fallback Response (Chinese)</legend>
+                  <textarea id="set_chatDefaultResponseZh" class="textarea textarea-bordered w-full h-24" data-i18n-admin="adminChatResponsePlaceholder"></textarea>
+                </fieldset>
+              </div>
+
+              <div class="mt-6 flex items-center justify-end gap-4">
+                <span id="settingsSuccessMsg" class="text-success text-sm hidden"><i data-lucide="check" class="w-4 h-4 inline"></i> <span data-i18n-admin="adminSettingsSaved">Settings saved!</span></span>
+                <button type="submit" class="btn btn-primary"><i data-lucide="save" class="w-4 h-4 mr-1"></i> <span data-i18n-admin="adminSaveChanges">Save Changes</span></button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- ======= Reviews Tab ======= -->
+      <div id="reviewsTab" class="hidden fade-in">
+        <div class="flex justify-between items-center mb-4">
+          <h2 class="admin-heading" data-i18n-admin="adminTravellerStories">Traveller Stories</h2>
+          <button id="openReviewFormBtn" class="btn btn-primary btn-sm" type="button" data-admin-action="open-review-form">
+            <i data-lucide="plus" class="w-4 h-4 mr-1"></i> <span data-i18n-admin="adminAddReview">Add Review</span>
+          </button>
+        </div>
+        <div id="reviewsAdminGrid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+      <!-- ======= FAQs Tab ======= -->
+      <div id="faqsTab" class="hidden fade-in">
+        <div class="flex justify-between items-center mb-4">
+          <h2 class="admin-heading" data-i18n-admin="adminFrequentlyAskedQuestions">Frequently Asked Questions</h2>
+          <button id="openFaqFormBtn" class="btn btn-primary btn-sm" type="button" data-admin-action="open-faq-form">
+            <i data-lucide="plus" class="w-4 h-4 mr-1"></i> <span data-i18n-admin="adminAddFaq">Add FAQ</span>
+          </button>
+        </div>
+        <div id="faqsAdminList" class="space-y-4">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ======================== REVIEW FORM MODAL ======================== -->
+  <dialog id="reviewFormModal" class="modal modal-responsive">
+    <div class="modal-box max-w-2xl bg-base-100">
+      <form method="dialog">
+        <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2" data-admin-i18n-attr="aria-label:adminCancel">✕</button>
+      </form>
+      <h3 class="font-bold text-xl mb-6 flex items-center gap-2 border-b border-base-200 pb-4" id="reviewFormTitle">
+        <i data-lucide="message-square-quote" class="text-primary w-5 h-5"></i> <span data-i18n-admin="adminAddReview">Add Review</span>
+      </h3>
+      <form id="reviewForm" novalidate>
+        <input type="hidden" id="rf_id" />
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+          <fieldset class="fieldset">
+            <legend class="fieldset-legend font-semibold" data-i18n-admin="adminTravellerName">Traveller Name</legend>
+            <input type="text" id="rf_name" class="input input-bordered w-full" required data-i18n-admin="adminSampleName" placeholder="Sarah L." />
+          </fieldset>
+          <fieldset class="fieldset">
+            <legend class="fieldset-legend font-semibold" data-i18n-admin="adminCountry">Country</legend>
+            <input type="text" id="rf_country" class="input input-bordered w-full" required data-i18n-admin="adminSampleCountry" placeholder="USA" />
+          </fieldset>
+        </div>
+        <fieldset class="fieldset mb-4">
+          <legend class="fieldset-legend font-semibold" data-i18n-admin="adminReviewTextEn">Review Text (English)</legend>
+          <textarea id="rf_textEn" class="textarea textarea-bordered w-full h-24" required></textarea>
+        </fieldset>
+        <fieldset class="fieldset mb-6">
+          <legend class="fieldset-legend font-semibold" data-i18n-admin="adminReviewTextZh">Review Text (Chinese)</legend>
+          <textarea id="rf_textZh" class="textarea textarea-bordered w-full h-24" required></textarea>
+        </fieldset>
+        <div class="modal-action">
+          <button type="button" class="btn" data-admin-action="close-modal" data-modal-id="reviewFormModal"><span data-i18n-admin="adminCancel">Cancel</span></button>
+          <button type="submit" class="btn btn-primary"><i data-lucide="save" class="w-4 h-4 mr-1"></i> <span data-i18n-admin="adminSaveReview">Save Review</span></button>
+        </div>
+      </form>
+    </div>
+  </dialog>
+
+  <!-- ======================== FAQ FORM MODAL ======================== -->
+  <dialog id="faqFormModal" class="modal modal-responsive">
+    <div class="modal-box max-w-2xl bg-base-100">
+      <form method="dialog">
+        <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2" data-admin-i18n-attr="aria-label:adminCancel">✕</button>
+      </form>
+      <h3 class="font-bold text-xl mb-6 flex items-center gap-2 border-b border-base-200 pb-4" id="faqFormTitle">
+        <i data-lucide="help-circle" class="text-primary w-5 h-5"></i> <span data-i18n-admin="adminAddFaq">Add FAQ</span>
+      </h3>
+      <form id="faqForm" novalidate>
+        <input type="hidden" id="ff_id" />
+        <fieldset class="fieldset mb-4">
+          <legend class="fieldset-legend font-semibold" data-i18n-admin="adminQuestionEn">Question (English)</legend>
+          <input type="text" id="ff_qEn" class="input input-bordered w-full" required />
+        </fieldset>
+        <fieldset class="fieldset mb-4">
+          <legend class="fieldset-legend font-semibold" data-i18n-admin="adminQuestionZh">Question (Chinese)</legend>
+          <input type="text" id="ff_qZh" class="input input-bordered w-full" required />
+        </fieldset>
+        <fieldset class="fieldset mb-4">
+          <legend class="fieldset-legend font-semibold" data-i18n-admin="adminAnswerEn">Answer (English)</legend>
+          <textarea id="ff_aEn" class="textarea textarea-bordered w-full h-24" required></textarea>
+        </fieldset>
+        <fieldset class="fieldset mb-6">
+          <legend class="fieldset-legend font-semibold" data-i18n-admin="adminAnswerZh">Answer (Chinese)</legend>
+          <textarea id="ff_aZh" class="textarea textarea-bordered w-full h-24" required></textarea>
+        </fieldset>
+        <div class="modal-action">
+          <button type="button" class="btn" data-admin-action="close-modal" data-modal-id="faqFormModal"><span data-i18n-admin="adminCancel">Cancel</span></button>
+          <button type="submit" class="btn btn-primary"><i data-lucide="save" class="w-4 h-4 mr-1"></i> <span data-i18n-admin="adminSaveFaq">Save FAQ</span></button>
+        </div>
+      </form>
+    </div>
+  </dialog>
+
+  <!-- ======================== TOUR FORM MODAL ======================== -->
+  <dialog id="tourFormModal" class="modal modal-responsive">
+    <div class="modal-box max-w-3xl bg-base-100">
+      <form method="dialog">
+        <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2" data-admin-i18n-attr="aria-label:adminCancel">✕</button>
+      </form>
+      <h3 class="font-bold text-xl mb-6 flex items-center gap-2 border-b border-base-200 pb-4" id="tourFormTitle">
+        <i data-lucide="plus-circle" class="text-primary w-5 h-5"></i> <span data-i18n-admin="adminAddNewTourFormTitle">Add New Tour</span>
+      </h3>
+
+      <form id="tourForm" novalidate>
+        <input type="hidden" id="tf_id" />
+
+        <!-- Bilingual Title Row -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+          <fieldset class="fieldset">
+            <legend class="fieldset-legend font-semibold" data-i18n-admin="adminTitleEn">Title (English)</legend>
+            <input type="text" id="tf_titleEn" class="input input-bordered w-full" required data-i18n-admin="adminTitlePlaceholderEn" placeholder="The Ultimate Panda Experience" />
+          </fieldset>
+          <fieldset class="fieldset">
+            <legend class="fieldset-legend font-semibold" data-i18n-admin="adminTitleZh">Title (Chinese)</legend>
+            <input type="text" id="tf_titleZh" class="input input-bordered w-full" required data-i18n-admin="adminTitlePlaceholderZh" placeholder="大熊猫终极体验" />
+          </fieldset>
+        </div>
+
+        <!-- Bilingual Description Row -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+          <fieldset class="fieldset">
+            <legend class="fieldset-legend font-semibold" data-i18n-admin="adminDescriptionEn">Description (English)</legend>
+            <textarea id="tf_descEn" class="textarea textarea-bordered w-full h-24" required data-i18n-admin="adminDescriptionPlaceholderEn" placeholder="Describe the tour experience..."></textarea>
+          </fieldset>
+          <fieldset class="fieldset">
+            <legend class="fieldset-legend font-semibold" data-i18n-admin="adminDescriptionZh">Description (Chinese)</legend>
+            <textarea id="tf_descZh" class="textarea textarea-bordered w-full h-24" required data-i18n-admin="adminDescriptionPlaceholderZh" placeholder="描述旅行体验..."></textarea>
+          </fieldset>
+        </div>
+
+        <!-- Price, Duration, Image, Tags -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+          <fieldset class="fieldset">
+            <legend class="fieldset-legend font-semibold" data-i18n-admin="adminPrice">Price (¥)</legend>
+            <input type="number" id="tf_price" class="input input-bordered w-full" required min="1" data-i18n-admin="adminPricePlaceholder" placeholder="450" />
+          </fieldset>
+          <fieldset class="fieldset">
+            <legend class="fieldset-legend font-semibold" data-i18n-admin="adminDuration">Duration (hours)</legend>
+            <input type="number" id="tf_duration" class="input input-bordered w-full" required min="0.5" step="0.5" data-i18n-admin="adminDurationPlaceholder" placeholder="3" />
+          </fieldset>
+          <fieldset class="fieldset col-span-2">
+            <legend class="fieldset-legend font-semibold" data-i18n-admin="adminImageUrl">Image URL or Base64</legend>
+            <input type="text" id="tf_image" class="input input-bordered w-full" required data-i18n-admin="adminImageUrlPlaceholder" placeholder="Paste URL from Gallery..." />
+          </fieldset>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+          <fieldset class="fieldset">
+            <legend class="fieldset-legend font-semibold" data-i18n-admin="adminTags">Tags (comma-separated)</legend>
+            <input type="text" id="tf_tags" class="input input-bordered w-full" required data-i18n-admin="adminTagsPlaceholder" placeholder="Pandas, Nature" />
+          </fieldset>
+          <fieldset class="fieldset">
+            <legend class="fieldset-legend font-semibold" data-i18n-admin="adminStatusLabel">Status</legend>
+            <select id="tf_active" class="select select-bordered w-full">
+              <option value="true" data-i18n-admin="adminActiveVisible">Active (Visible)</option>
+              <option value="false" data-i18n-admin="adminHidden">Hidden</option>
+            </select>
+          </fieldset>
+        </div>
+
+        <!-- Popular toggle -->
+        <div class="form-control w-fit mb-6">
+          <label class="cursor-pointer label gap-4">
+            <span class="label-text font-semibold" data-i18n-admin="adminPopularLabel">⭐ Mark as Popular</span>
+            <input type="checkbox" id="tf_popular" class="toggle toggle-warning" />
+          </label>
+        </div>
+
+        <div class="modal-action">
+          <button type="button" class="btn" data-admin-action="close-modal" data-modal-id="tourFormModal"><span data-i18n-admin="adminCancel">Cancel</span></button>
+          <button type="submit" class="btn btn-primary">
+            <i data-lucide="save" class="w-4 h-4 mr-1"></i> <span data-i18n-admin="adminSaveTour">Save Tour</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </dialog>
+
+  <!-- ======================== SCRIPTS ======================== -->
+  <script src="js/data.js"></script>
+  <script src="js/db.js"></script>
+  <script src="js/admin.js"></script>
+</body>
+</html>
